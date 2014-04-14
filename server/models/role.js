@@ -8,12 +8,12 @@ var mongoose = require('mongoose'),
 /**
  * Role Schema
  */
-var AuthSchema = new Schema({
-    route: {type: String, ref: 'Route', index: true}
+var MenuSchema = new Schema({
+    menu: {type: String, ref: 'Menu'}
 });
 var RoleSchema = new Schema({
     _id: String,
-    auth: [AuthSchema]
+    menus: [MenuSchema]
 });
 
 mongoose.model('Role', RoleSchema);

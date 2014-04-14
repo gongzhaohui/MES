@@ -11,7 +11,7 @@ var mongoose = require('mongoose'),
  * Employee Schema
  */
 var EmployeeSchema = new Schema({
-    _id:String,
+    _id: String,
     name: String,
     gender: {
         type: String,
@@ -34,7 +34,7 @@ var EmployeeSchema = new Schema({
         zip: String
     },
     employedDate: Date,
-    department: String,
+    department: {type: String, ref: 'Depart', index: true},
     role: {type: String, ref: 'role'}
 });
 /**
@@ -129,6 +129,16 @@ EmployeeSchema.methods = {
         if (!password || !this.salt) return '';
         var salt = new Buffer(this.salt, 'base64');
         return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
+    }
+};
+EmployeeSchema.statics = {
+    load: function (id, cb) {
+        this.findOne({
+            _id: id
+        })
+            .populate('role')
+            .populate('menus')
+            .exec(cb);
     }
 };
 

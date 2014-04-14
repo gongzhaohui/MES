@@ -6,11 +6,12 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var RouteSchema = new Schema({
+var MenuSchema = new Schema({
     _id: String,
     func: String,
-    Route: String
+    title:String,
+    link: String
 });
-RouteSchema.statics = {};
-RouteSchema.methods = {};
-mongoose.model('Route', RouteSchema);
+MenuSchema.statics = {};
+MenuSchema.methods = {};
+mongoose.model('Menu', MenuSchema);
