@@ -2,7 +2,9 @@
 
 /**
  * Created by gong on 14-4-1.
+ * todo
  * 更新履历
+ * 订单类型？
  */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
@@ -16,7 +18,9 @@ var OperationSchema = new Schema({
     row: {type: Number, index: true},
     station: {type: String, index: true},
     job: String,
-    tasktime: Number,
+    setuptime:Number,
+    jobtime: Number,
+    carrytime:Number,
     comment: String,
     startDate: Date,
     dueDate: Date,

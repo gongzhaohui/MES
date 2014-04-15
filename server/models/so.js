@@ -2,7 +2,10 @@
 
 /**
  * Created by gong on 14-3-31.
- * 更新履历 函数
+ * todo
+ * 更新履历函数
+ * 订单类型
+ *
  */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;

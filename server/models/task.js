@@ -5,13 +5,14 @@
  */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
+/*
 var SourceSchema = new Schema({
-    _id: {type: String, index: true},
+    moId: {type: String},
     moRow: {type: Number},
     opRow: {type: Number},
     ref: {type: String, default: 'MO'}
-});
-/*
+},{autoId:false});
+
 var jobSchema = new Schema({
     date: Date,
     operator: String,
@@ -21,15 +22,18 @@ var jobSchema = new Schema({
 */
 var TaskSchema = new Schema({
     _id: String,
-    source: SourceSchema,
+    source: String, //source=moId.moRow.opRow
     station: {type: String, ref: 'station'},
     task: String,
-    status:String,
+    status:{type:String,ref:'Status'},
     order: {
         start:Date,
         durDate:Date,
         qty: Number,
-        jobtime: Number
+        setuptime:Number,
+        jobtime: Number,
+        carrytime:Number,
+        comment: String
     },
     assign: {
         start: Date,

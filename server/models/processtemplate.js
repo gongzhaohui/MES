@@ -14,7 +14,9 @@ var ProcessTemplateSchema = new Schema({
             row: Number,
             station: String,
             job: String,
-            tasktime: Number,
+            setuptime:Number,
+            jobtime: Number,
+            carrytime:Number,
             comment: String
         }
     ],

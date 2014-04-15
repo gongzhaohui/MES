@@ -14,6 +14,7 @@ var ShiftSchema = new Schema({
 var StationSchema = new Schema({
     _id: String,
     station: String,
+    finitecapacity:{type:Boolean,default:true},
     shifts:[ShiftSchema]
 });
 StationSchema.statics = {};
