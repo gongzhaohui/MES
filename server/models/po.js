@@ -20,7 +20,7 @@ var POItemSchema = new Schema({
     qty: Number,
     dueDate: Date,
     way: {type: String, ref: 'Way'},
-    status: {type: String, ref: 'VoucherStatus', index: true},
+    status: {type: String, ref: 'Status', index: true},
     wId: {type: String, ref: 'Warehouse', index: true},
     receive: {
         date: Date,
@@ -34,7 +34,7 @@ var POSchema = new Schema({
     eId: {type: String, ref: 'Employee'},
     PODate: {type: Date, index: true},
     deuDate: {type: Date, index: true},
-    voucherStatus: {type: String, ref: 'VoucherStatus', index: true},
+    Status: {type: String, ref: 'Status', index: true},
     items: [POItemSchema],
     created: {
         date: {type: Date, default: Date.now, index: true},

@@ -14,7 +14,7 @@ var ReceiptSchema = new Schema({
     iId: {type: String, ref: 'Invoice'},
     iAmount: Number,
     rAmount: Number,
-    VoucherStatus: {type: String, ref: 'VoucherStatus'},
+    Status: {type: String, ref: 'Status'},
     created: {
         date: {type: Date, default: Date.now},
         eId: {type: String, ref: 'Employee'}

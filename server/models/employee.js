@@ -35,6 +35,7 @@ var EmployeeSchema = new Schema({
     },
     employedDate: Date,
     department: {type: String, ref: 'Depart', index: true},
+    title:String,
     role: {type: String, ref: 'role'}
 });
 /**

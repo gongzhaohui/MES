@@ -24,7 +24,7 @@ var OperationSchema = new Schema({
         date: Date,
         qty: Number,
         returnQty: Number,
-        returnTo: Number,
+        returnTo:  {type:String,ref:'Station'},
         operator: String
     },
     finish: {
@@ -48,7 +48,7 @@ var MOItemSchema = new Schema({
     qty: Number,
     dueDate: Date,
     way: {type: String, ref: 'Way'},
-    status: {type: String, ref: 'VoucherStatus', index: true},
+    status: {type: String, ref: 'Status', index: true},
     operations: [OperationSchema],
     check: {
         date: Date,
@@ -68,7 +68,7 @@ var MOSchema = new Schema({
     eId: {type: String, ref: 'Employee'},
     moDate: {type: Date, index: true},
     deuDate: {type: Date, index: true},
-    voucherStatus: {type: String, ref: 'VoucherStatus', index: true},
+    Status: {type: String, ref: 'Status', index: true},
     items: [MOItemSchema],
     created: {
         date: {type: Date, default: Date.now, index: true},
@@ -84,7 +84,7 @@ var MOSchema = new Schema({
 });
 MOSchema.index({'items.source': 1});
 MOSchema.index({'_id': 1, 'items.row': 1});
-MOSchema.index({'_id': 1, 'items.row': 1, 'items.operation.row': 1});
+MOSchema.index({'_id': 1, 'items.row': 1, 'items.operation.row': 1, 'items.operation.station': 1});
 MOSchema.statics = {};
 MOSchema.methods = {};
 mongoose.model('MO', MOSchema);

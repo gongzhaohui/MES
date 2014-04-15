@@ -22,6 +22,14 @@ var DepartSchema = new Schema({
         }
     ]
 });
-DepartSchema.statics = {};
+DepartSchema.statics = {
+    load: function (id, cb) {
+        this.findOne({
+            _id: id
+        })
+            .populate('created.eid')
+            .exec(cb);
+    }
+};
 DepartSchema.methods = {};
 mongoose.model('Depart', DepartSchema);
