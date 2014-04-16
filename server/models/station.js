@@ -7,14 +7,19 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 var ShiftSchema = new Schema({
-    _id:String,
-    ref:String,
+    shift:{type:String,ref:String},
+    //finite or infinite capacity
+    finite:{type:Boolean,default:true},
+    //k is a coefficient of capacity
+    k:Number,
+    //default ability=shift.duration*k(k<=1) when finite.Otherwise will be a large number on behalf of infinite.
     ability:Number
 });
 var StationSchema = new Schema({
     _id: String,
     station: String,
-    finitecapacity:{type:Boolean,default:true},
+    officer:{type:String,ref:'Employee'},
+    depart:{type:String,ref:'Department'},
     shifts:[ShiftSchema]
 });
 StationSchema.statics = {};
