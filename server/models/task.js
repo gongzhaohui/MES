@@ -35,6 +35,11 @@ var TaskSchema = new Schema({
         carrytime:Number,
         comment: String
     },
+    schedule: {
+        //schedul.date.station.shift._id
+        poolpath:String,
+        start: Date
+    },
     assign: {
         start: Date,
         qty:Number

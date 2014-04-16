@@ -7,7 +7,7 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 var ShiftSchema = new Schema({
-    shift:{type:String,ref:String},
+    shift:{type:String,ref:'Shift'},
     //finite or infinite capacity
     finite:{type:Boolean,default:true},
     //k is a coefficient of capacity

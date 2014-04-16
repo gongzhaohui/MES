@@ -15,8 +15,7 @@ var TaskSchema = new Schema({
     duration:Number
 });
 var ShiftSchema = new Schema({
-    _id:String,
-    ref:String,
+    shift:{type:String,ref:String},
     //finite or infinite capacity
     finite:{type:Boolean,default:true},
     //k is a coefficient of capacity
@@ -27,9 +26,7 @@ var ShiftSchema = new Schema({
 });
 var StationSchema = new Schema({
     _id: String,
-    station: String,
-    officer:{type:String,ref:'Employee'},
-    depart:{type:String,ref:'Department'},
+    station:{type:String,ref:'Station'},
     shifts:[ShiftSchema]
 });
 var DailySchema = new Schema({
