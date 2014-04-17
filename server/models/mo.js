@@ -9,11 +9,6 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var SourceSchema = new Schema({
-    _id: {type: String, index: true},
-    row: {type: Number},
-    ref: {type: String}
-});
 var OperationSchema = new Schema({
     row: {type: Number, index: true},
     station: {type: String, index: true},
@@ -47,7 +42,8 @@ var OperationSchema = new Schema({
 }, {autoId: false});
 var MOItemSchema = new Schema({
     row: {type: Number, index: true},
-    source: SourceSchema,
+    //source.sid.row
+    source: String,
     iId: {type: String, ref: 'Inventory', index: true},
     qty: Number,
     dueDate: Date,

@@ -8,7 +8,9 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var CreditRatingSchema = new Schema({
+    //code
     _id: String,
+    //months
     period: Number,
     amount: Number
 

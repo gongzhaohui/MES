@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 var CustomerSchema = new Schema(
     {
+        //code six digits
         _id: String,
         name: {
             type: String,

@@ -38,7 +38,8 @@ var TaskSchema = new Schema({
     schedule: {
         //schedul.date.station.shift._id
         poolpath:String,
-        start: Date
+        start: Date,
+        end:date
     },
     assign: {
         start: Date,

@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var DepartSchema = new Schema({
+    //code
     _id: String,
     path: String,
     description: String,

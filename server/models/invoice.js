@@ -6,12 +6,8 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 var InvoiceItemSchema = new Schema({
-    source: {
-        _id: {type: String},
-        row: {type: Number},
-        ref: {type: String}
-    },
-    soRow: {type: Number, index: true},
+    //source.sid.row
+    source: String,
     iId: {type: String, ref: 'Inventory'},
     qty: Number,
     price: Number
@@ -23,6 +19,7 @@ var InvoiceSchema = new Schema({
     cId: {type: String, ref: 'Employee'},
     items: [InvoiceItemSchema],
     amount: Number,
+    receipted:Number,
     Status: {type: String, ref: 'Status'},
     created: {
         date: {type: Date, default: Date.now},

@@ -8,7 +8,9 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var CategorySchema = new Schema({
+    //code
     _id: String,
+    //ancestor.parent.me
     path: String,
     description: String,
     defaultWh: {type: String, ref: 'Warehouse', index: true},

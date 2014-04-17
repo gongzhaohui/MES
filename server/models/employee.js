@@ -11,6 +11,7 @@ var mongoose = require('mongoose'),
  * Employee Schema
  */
 var EmployeeSchema = new Schema({
+    //code=employed(YYYYMM)+seq(000)
     _id: String,
     name: String,
     gender: {
