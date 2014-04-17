@@ -12,7 +12,7 @@ var mongoose = require('mongoose'),
  * exports
  */
 exports={
-    trmp:function(req, res, next, id) {
+    temp:function(req, res, next, id) {
 
     },
     /* todo
