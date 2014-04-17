@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
     Depart = mongoose.model('Depart'),
     User = mongoose.model('Employee'),
+    SO = mongoose.model('SO'),
     _ = require('lodash');
 
 /**

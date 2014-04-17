@@ -5,14 +5,14 @@
  */
 var mongoose = require('mongoose'),
     Depart = mongoose.model('Depart'),
-    User = mongoose.model('Employee'),
+    SO = mongoose.model('SO'),
     _ = require('lodash');
 
 /**
  * exports
  */
 exports={
-    temp:function(req, res, next, id) {
+    outbound:function(req, res, next, id) {
 
     },
     /* todo
