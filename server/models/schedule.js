@@ -8,7 +8,7 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 var TaskSchema = new Schema({
-    _id:number,
+    _id:Number,
     task:{type:String,ref:'Task'},
     start:Date,
     //duration=setup+qty*jobtime+carrying

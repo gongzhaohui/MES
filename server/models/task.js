@@ -39,7 +39,7 @@ var TaskSchema = new Schema({
         //schedul.date.station.shift._id
         poolpath:String,
         start: Date,
-        end:date
+        end:Date
     },
     assign: {
         start: Date,
@@ -66,7 +66,7 @@ var TaskSchema = new Schema({
         method: {type: String, ref: 'RepairMethod'}
     }
 });
-TaskSchema.index(source);
+TaskSchema.index(TaskSchema.source);
 TaskSchema.statics = {};
 TaskSchema.methods = {};
 mongoose.model('Task', TaskSchema);

@@ -10,10 +10,17 @@ var mongoose = require('mongoose'),
 
 /**
  * exports
+ *
  */
-exports={
-    test:function(req, res) {
-        res.jsonp(Counter.getNewId('S',1));
+exports.test = function (req, res) {
+    var newId='';
+    Counter.getNewId('S', 1, function (err, newId) {
+        res.jsonp({id: newId});
+    });
+};
+exports = {
+    test: function (req, res) {
+        res.jsonp(Counter.getNewId('S', 1));
     },
     /* todo
      */
