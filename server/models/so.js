@@ -40,6 +40,8 @@ var SOSchema = new Schema({
     ]
 });
 SOSchema.index({_id: 1, 'items.row': 1});
+/*
+populate employee,inventory,customer*/
 SOSchema.statics = {
     load : function(id, cb) {
         this.findOne({

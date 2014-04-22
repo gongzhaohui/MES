@@ -14,7 +14,7 @@ var mongoose = require('mongoose'),
  */
 exports = {
     /*
-     todo
+     find so by id
      */
     so: function (req, res, next, id) {
         SO.load(id, function (err, so) {
@@ -29,7 +29,7 @@ exports = {
      * change SO status
      * reserve inventory
      * */
-    create: function () {
+    create: function (req,res) {
         var counter = mongoose.model('Counter');
         counter.getNewId('S', 1, function (err, newId) {
             var so = new SO(req.body);
@@ -64,11 +64,27 @@ exports = {
     },
     /*
      * todo
-     * list all populate employee,inventory
+     * list all, populate employee,inventory,customer
      * filter by eId or all
      * order by created
      * */
-    all: function () {
+    all: function (req, res) {
+    var filter={};
+        if(req.eId){filter={eId:req.eId}}
+        SO.find(filter)
+            .sort('-create.date')
+            .populate('eId', 'name username')
+            .populate('items.iId','toolNo drawingNo')
+            .populate('cId','name _id')
+            .exec(function(err, sos) {
+                if (err) {
+                    res.render('error', {
+                        status: 500
+                    });
+                } else {
+                    res.jsonp(sos);
+                }
+            });
     },
     /*
      * todo
