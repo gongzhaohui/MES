@@ -4,66 +4,70 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    SO= mongoose.model('SO'),
+    SO = mongoose.model('SO'),
     Status = mongoose.model('Status'),
-    Inventory=require('./inventory'),
-     _ = require('lodash');
+    Inventory = require('./inventory'),
+    _ = require('lodash');
 
 /**
  * exports
  */
 exports = {
     /*
-    todo
+     todo
      */
-    so:function(req, res, next, id){
-
+    so: function (req, res, next, id) {
+        SO.load(id, function (err, so) {
+            if (err) return next(err);
+            if (!so) return next(new Error('Failed to load article ' + id));
+            req.so = so;
+            next();
+        });
     },
     /*
-    * todo
-    * change SO status
-    * reserve inventory
-    * */
+     * todo
+     * change SO status
+     * reserve inventory
+     * */
     create: function () {
         var counter = mongoose.model('Counter');
-        counter.getNextSequence('S', 1, function (err, result) {
-            if (!err) {
-                var seqStr = '000000000' + result.seq;
-                seqStr = seqStr.slice(seqStr.length - 9);
-                var so = new SO({
-                    _id: 'S' + seqStr,
-                    soDate: Date(),
-                    deuDate: Date(),
-                    items: [
-                        {
-                            rowNo: 1,
-                            quantity: 5
-                        }
-                    ]
-                });
-                //req.body);
-//    so.aId = req.user;
+        counter.getNewId('S', 1, function (err, newId) {
+            var so = new SO(req.body);
+            if (err) {
+                return res.send('so/create', {
+                    errors: err.errors,
+                    so: so
+                })
+            }
+            else {
 
+                so._id = newId;
+                so.created = {
+                    date: Date.now,
+                    eid: req.user
+                };
                 so.save(function (err) {
                     if (err) {
-                        return res.send('user/signup', {
+                        return res.send('so/create', {
                             errors: err.errors,
                             so: so
                         });
                     } else {
                         res.jsonp(so);
+                        /*todo
+                        * reserve inventory
+                        * */
                     }
                 });
             }
-            else res.jsonp(err);
         });
     },
     /*
-    * todo
-    * list all populate employee,inventory
-    * filter by eId or all
-    * order by created
-    * */
+     * todo
+     * list all populate employee,inventory
+     * filter by eId or all
+     * order by created
+     * */
     all: function () {
     },
     /*

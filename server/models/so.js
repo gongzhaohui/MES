@@ -23,7 +23,6 @@ var SOItemSchema = new Schema({
 }, {autoId: false});
 var SOSchema = new Schema({
     _id: String,
-    aId: {type: String, ref: 'Employee'},
     eId: {type: String, ref: 'Employee', index: true},
     cId: {type: String, ref: 'Customer', index: true},
     deuDate: {type: Date, index: true},
@@ -41,6 +40,16 @@ var SOSchema = new Schema({
     ]
 });
 SOSchema.index({_id: 1, 'items.row': 1});
-SOSchema.statics = {};
+SOSchema.statics = {
+    load : function(id, cb) {
+        this.findOne({
+            _id: id
+        })
+            .populate('eId', 'name username')
+            .populate('items.iId','toolNo drawingNo')
+            .populate('cId','name _id')
+            .exec(cb);
+    }
+};
 SOSchema.methods = {};
 mongoose.model('SO', SOSchema);

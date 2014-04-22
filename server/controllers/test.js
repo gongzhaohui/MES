@@ -12,33 +12,29 @@ var mongoose = require('mongoose'),
  * exports
  *
  */
+
 exports.test = function (req, res) {
-    var newId='';
+
     Counter.getNewId('S', 1, function (err, newId) {
         res.jsonp({id: newId});
     });
 };
-exports = {
-    test: function (req, res) {
-        res.jsonp(Counter.getNewId('S', 1));
-    },
-    /* todo
-     */
-    create: function (req, res) {
-    },
-    /* todo
+/* todo
+ */
+exports.create = function (req, res) {
+};
+/* todo
 
-     */
-    all: function (req, res) {
-    },
-    /* todo
+ */
+exports.all = function (req, res) {
+};
+/* todo
 
-     */
-    update: function (req, res) {
-    },
-    /* todo
+ */
+exports..update = function (req, res) {
+};
+/* todo
 
-     */
-    remove: function (req, res) {
-    }
+ */
+exports..remove = function (req, res) {
 };

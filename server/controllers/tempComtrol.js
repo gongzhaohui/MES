@@ -11,27 +11,24 @@ var mongoose = require('mongoose'),
 /**
  * exports
  */
-exports={
-    temp:function(req, res, next, id) {
+/* todo
+ */
+exports.tmp = function (req, res) {
+};
+exports.create = function (req, res) {
+};
+/* todo
 
-    },
-    /* todo
-     */
-    create: function (req, res) {
-    },
-    /* todo
+ */
+exports.all = function (req, res) {
+};
+/* todo
 
-     */
-    all: function (req, res) {
-    },
-    /* todo
+ */
+exports..update = function (req, res) {
+};
+/* todo
 
-     */
-    update: function (req, res) {
-    },
-    /* todo
-
-     */
-    remove: function (req, res) {
-    }
+ */
+exports..remove = function (req, res) {
 };
