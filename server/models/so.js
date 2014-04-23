@@ -26,7 +26,7 @@ var SOSchema = new Schema({
     eId: {type: String, ref: 'Employee', index: true},
     cId: {type: String, ref: 'Customer', index: true},
     deuDate: {type: Date, index: true},
-    Status: {type: String, ref: 'Status', index: true},
+    status: {type: String, ref: 'Status', index: true},
     items: [SOItemSchema],
     created: {
         date: {type: Date, default: Date.now, index: true},

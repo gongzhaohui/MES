@@ -29,7 +29,7 @@ exports = {
      * change SO status
      * reserve inventory
      * */
-    create: function (req,res) {
+    create: function (req, res) {
         var counter = mongoose.model('Counter');
         counter.getNewId('S', 1, function (err, newId) {
             var so = new SO(req.body);
@@ -55,8 +55,8 @@ exports = {
                     } else {
                         res.jsonp(so);
                         /*todo
-                        * reserve inventory
-                        * */
+                         * reserve inventory
+                         * */
                     }
                 });
             }
@@ -69,14 +69,14 @@ exports = {
      * order by created
      * */
     all: function (req, res) {
-    var filter={};
-        if(req.eId){filter={eId:req.eId}}
-        SO.find(filter)
+        var criteria = req.criteria | {};
+
+        SO.find(criteria)
             .sort('-create.date')
             .populate('eId', 'name username')
-            .populate('items.iId','toolNo drawingNo')
-            .populate('cId','name _id')
-            .exec(function(err, sos) {
+            .populate('items.iId', 'toolNo drawingNo')
+            .populate('cId', 'name _id')
+            .exec(function (err, sos) {
                 if (err) {
                     res.render('error', {
                         status: 500
@@ -91,7 +91,26 @@ exports = {
      * consider auth,updatable fields
      * history
      * */
-    update: function () {
+    update: function (req, res) {
+        var so = req.so;
+
+        so = _.extend(so, req.body);
+        var updated = so.updated | [];
+        updated.push({
+            eId: req.user._id,
+            date: Date.now
+        });
+        so.updated = updated;
+        so.save(function (err) {
+            if (err) {
+                return res.send('so/edit', {
+                    errors: err.errors,
+                    so: so
+                });
+            } else {
+                res.jsonp(so);
+            }
+        });
     },
     /*
      * todo
@@ -104,6 +123,18 @@ exports = {
      * todo
      * consider remove constraint,later process
      * */
-    remove: function () {
+    cancel: function (req, res) {
+        var so = req.so;
+        so.status = cancel;
+        so.save(function (err) {
+            if (err) {
+                return res.send('so/cancel', {
+                    errors: err.errors,
+                    so: so
+                });
+            } else {
+                res.jsonp(so);
+            }
+        });
     }
 };
