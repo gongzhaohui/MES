@@ -95,7 +95,7 @@ exports = {
         var so = req.so;
 
         so = _.extend(so, req.body);
-        var updated = so.updated | [];
+        var updated = so.updated || [];
         updated.push({
             eId: req.user._id,
             date: Date.now
@@ -125,7 +125,7 @@ exports = {
      * */
     cancel: function (req, res) {
         var so = req.so;
-        so.status = cancel;
+        so.status = 'cancel';
         so.save(function (err) {
             if (err) {
                 return res.send('so/cancel', {

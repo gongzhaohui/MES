@@ -34,7 +34,9 @@ var EmployeeSchema = new Schema({
         street: String,
         zip: String
     },
-    employedDate: Date,
+    status:String,
+    hiredDate: Date,
+    firedDate:Date,
     department: {type: String, ref: 'Depart', index: true},
     title:String,
     role: {type: String, ref: 'role'}
