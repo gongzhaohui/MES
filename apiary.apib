@@ -233,7 +233,7 @@ MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉
             name: 销售部,
             officer:'20140401'
             path: '/salses',
-            description: String,
+            description: '',
             created: {
                 date: 2014-04-25,
                 eId: '20140401'
@@ -243,7 +243,7 @@ MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉
             name: 销售1科,
             officer:'20140401'
             path: '/salses/sales01',
-            description: String,
+            description: '',
             created: {
                 date: 2014-04-25,
                 eId: '20140401'
@@ -258,7 +258,7 @@ MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉
             name: 制造部,
             officer:'20140402'
             path: '/manufacturing',
-            description: String,
+            description: '',
             created: {
                 date: 2014-04-25,
                 eId: '20140401'
@@ -268,33 +268,23 @@ MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉
 + Response 201 (application/json)
 
         {
-            id: ‘20140103’,
-            name: 关羽,
-            gender:'男',
-            email: guan@gmail.com,
-            username: guanyu,
-            hashed_password: ‘dshjfghjsgdsghdjsk’,
-            provider: ‘local’,
-            salt: ‘hjhgjskdjghkj’,
-            birthday: 1990-01-01,
-            address: {
-                province: ‘辽宁’,
-                city: 大连,
-                distinct: ‘甘井子区’,
-                street: ‘松江路107’,
-                zip: ‘116022’
-            },
-            employedDate: ‘2014-04-01’,
-            department: ‘sales’,
-            title:‘部长’,
-            role: ‘sales’
+            id: ‘manufacturing’,
+            name: 制造部,
+            officer:'20140402'
+            path: '/manufacturing',
+            description: '',
+            created: {
+                date: 2014-04-25,
+                eId: '20140401'
+            }
         }
+
         
 ## department [/department/{id}]
 + Parameters
-    + id (required, String, `20140401`) ... 要处理的员工`id`
+    + id (required, String, `salse`) ... 部门`id`
 
-### 编辑员工信息 [PUT]
+### 编辑部门信息 [PUT]
 
  + request Content-Type: application/json
  
@@ -305,30 +295,19 @@ MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉
  + response 200 (application/json)
  
         {
-            id: ‘20140102’,
-            name: 孔明,
-            gender:'男',
-            email: zhuge@gmail.com,
-            username: zhugeliang,
-            hashed_password: ‘dshjfghjsgdsghdjsk’,
-            provider: ‘local’,
-            salt: ‘hjhgjskdjghkj’,
-            birthday: 1990-01-01,
-            address: {
-                province: ‘辽宁’,
-                city: 大连,
-                distinct: ‘甘井子区’,
-                street: ‘松江路109’,
-                zip: ‘116022’
-            },
-            employedDate: ‘2014-04-01’,
-            department: ‘sales’,
-            title:‘销售员’,
-            role: ‘sales’
-        }]
+            id: ‘manufacturing’,
+            name: 制造部,
+            officer:'20140402'
+            path: '/manufacturing',
+            description: '',
+            created: {
+                date: 2014-04-25,
+                eId: '20140401'
+            }
+        }
 
 
-### 解雇员工 [DELETE]
+### 停用部门 [DELETE]
  + Response 204
 
 
