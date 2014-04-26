@@ -1,0 +1,420 @@
+FORMAT: 1A
+
+# MES
+MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉及*财务*。
+
+   简单功能列表：  
+ 
+ * 销售订单
+ * 采购订单
+ * 存货管理
+ * 制作订单
+ * BOM
+ * 工艺
+ * 排程
+ * 车间计划
+ * 车间报工
+ * 产品入出库
+ * 移库
+ * 开票记录
+ * 收款纪录
+ 
+
+# Group 基础页面  
+
+## index [/]
+欢迎页
+### index [GET]
+ + Response 200 (text/html)
+ 
+        index.html  
+
+## 登录页面 [/login.html]
+显示登录页面
+
+### GET
++ Response 200 (text/html)
+
+        login.html  
+    
+## 登录 [/login]
+根据登录用户角色，获取功能菜单。  
+
+### GET
++ Response 200 (application/json)  
+
+        {
+            role:'',
+            menu:
+            {
+                group:'业务'，
+                menus：[{
+                    title:'销售订单',
+                    link:'so.html'
+                    },
+                    {...}],
+                group：'查询'，
+                menus：[{
+                    title:'销售订单',
+                    link:'so.html'
+                    },
+                    {...}]
+            }
+        }
+
+## 登出 [/logout]
+### GET
++ Response 200 (text/html)
+
+        index.html  
+        
+# Group Employee  
+员工基础档案。记录员工基本信息。  
+
+ * 指定员工角色（role）。
+ * id格式：**雇佣年月（YYYYMM）+流水（00）**
+
+## 员工 [/employee]
+### 员工列表 [GET]
++ request  
+
+        {department:departmentId} | {}  
+
++ Response 200 (application/json)
+
+        [{
+            id: ‘20140101’,
+            name: 刘备,
+            gender:'男',
+            email: liu@gmail.com,
+            username: liubei,
+            hashed_password: ‘dshjfghjsgdsghdjsk’,
+            provider: ‘local’,
+            salt: ‘hjhgjskdjghkj’,
+            birthday: 1990-01-01,
+            address: {
+                province: ‘辽宁’,
+                city: 大连,
+                distinct: ‘甘井子区’,
+                street: ‘松江路108’,
+                zip: ‘116022’
+            },
+            employedDate: ‘2014-04-01’,
+            department: ‘sales’,
+            title:‘部长’,
+            role: ‘salesDirector’
+        }, {
+            id: ‘20140102’,
+            name: 孔明,
+            gender:'男',
+            email: zhuge@gmail.com,
+            username: zhugeliang,
+            hashed_password: ‘dshjfghjsgdsghdjsk’,
+            provider: ‘local’,
+            salt: ‘hjhgjskdjghkj’,
+            birthday: 1990-01-01,
+            address: {
+                province: ‘辽宁’,
+                city: 大连,
+                distinct: ‘甘井子区’,
+                street: ‘松江路109’,
+                zip: ‘116022’
+            },
+            employedDate: ‘2014-04-01’,
+            department: ‘sales’,
+            title:‘销售员’,
+            role: ‘sales’
+        }]
+        
+### 增加员工 [POST]
++ Request (application/json)
+
+        {
+            id: ‘20140103’,
+            name: 关羽,
+            gender:'男',
+            email: guan@gmail.com,
+            username: guanyu,
+            hashed_password: ‘dshjfghjsgdsghdjsk’,
+            provider: ‘local’,
+            salt: ‘hjhgjskdjghkj’,
+            birthday: 1990-01-01,
+            address: {
+                province: ‘辽宁’,
+                city: 大连,
+                distinct: ‘甘井子区’,
+                street: ‘松江路107’,
+                zip: ‘116022’
+            },
+            employedDate: ‘2014-04-01’,
+            department: ‘sales’,
+            title:‘部长’,
+            role: ‘sales’
+        }
+
++ Response 201 (application/json)
+
+        {
+            id: ‘20140103’,
+            name: 关羽,
+            gender:'男',
+            email: guan@gmail.com,
+            username: guanyu,
+            hashed_password: ‘dshjfghjsgdsghdjsk’,
+            provider: ‘local’,
+            salt: ‘hjhgjskdjghkj’,
+            birthday: 1990-01-01,
+            address: {
+                province: ‘辽宁’,
+                city: 大连,
+                distinct: ‘甘井子区’,
+                street: ‘松江路107’,
+                zip: ‘116022’
+            },
+            employedDate: ‘2014-04-01’,
+            department: ‘sales’,
+            title:‘部长’,
+            role: ‘sales’
+        }
+        
+## 员工 [/employee/{id}]
++ Parameters
+    + id (required, String, `20140401`) ... 要处理的员工`id`
+
+### 编辑员工信息 [PUT]
+
+ + request Content-Type: application/json
+ 
+        {
+            "content": "Updated file contents"
+        }
+
+ + response 200 (application/json)
+ 
+        {
+            id: ‘20140102’,
+            name: 孔明,
+            gender:'男',
+            email: zhuge@gmail.com,
+            username: zhugeliang,
+            hashed_password: ‘dshjfghjsgdsghdjsk’,
+            provider: ‘local’,
+            salt: ‘hjhgjskdjghkj’,
+            birthday: 1990-01-01,
+            address: {
+                province: ‘辽宁’,
+                city: 大连,
+                distinct: ‘甘井子区’,
+                street: ‘松江路109’,
+                zip: ‘116022’
+            },
+            employedDate: ‘2014-04-01’,
+            department: ‘sales’,
+            title:‘销售员’,
+            role: ‘sales’
+        }]
+
+
+### 解雇员工 [DELETE]
+ + Response 204
+
+# Group Department
+部门基础档案。记录员工基本信息。  
+
+ * id格式：**部门英文缩写或拼音**
+
+## 部门 [/department]
+### 部门列表 [GET]
+
++ Response 200 (application/json)
+
+        [{
+            id: ‘sales’,
+            name: 销售部,
+            officer:'
+            path: String,
+            description: String,
+            created: {
+                date: {type: Date, default: Date.now},
+                eId: {type: String, ref: 'Employee'}
+            }
+        }, {
+            id: '20140102’,
+            name: 孔明,
+            gender:'男',
+            email: zhuge@gmail.com,
+            username: zhugeliang,
+            hashed_password: ‘dshjfghjsgdsghdjsk’,
+            provider: ‘local’,
+            salt: ‘hjhgjskdjghkj’,
+            birthday: 1990-01-01,
+            address: {
+                province: ‘辽宁’,
+                city: 大连,
+                distinct: ‘甘井子区’,
+                street: ‘松江路109’,
+                zip: ‘116022’
+            },
+            employedDate: ‘2014-04-01’,
+            department: ‘sales’,
+            title:‘销售员’,
+            role: ‘sales’
+        }]
+        
+### 增加员工 [POST]
++ Request (application/json)
+
+        {
+            id: ‘20140103’,
+            name: 关羽,
+            gender:'男',
+            email: guan@gmail.com,
+            username: guanyu,
+            hashed_password: ‘dshjfghjsgdsghdjsk’,
+            provider: ‘local’,
+            salt: ‘hjhgjskdjghkj’,
+            birthday: 1990-01-01,
+            address: {
+                province: ‘辽宁’,
+                city: 大连,
+                distinct: ‘甘井子区’,
+                street: ‘松江路107’,
+                zip: ‘116022’
+            },
+            employedDate: ‘2014-04-01’,
+            department: ‘sales’,
+            title:‘部长’,
+            role: ‘sales’
+        }
+
++ Response 201 (application/json)
+
+        {
+            id: ‘20140103’,
+            name: 关羽,
+            gender:'男',
+            email: guan@gmail.com,
+            username: guanyu,
+            hashed_password: ‘dshjfghjsgdsghdjsk’,
+            provider: ‘local’,
+            salt: ‘hjhgjskdjghkj’,
+            birthday: 1990-01-01,
+            address: {
+                province: ‘辽宁’,
+                city: 大连,
+                distinct: ‘甘井子区’,
+                street: ‘松江路107’,
+                zip: ‘116022’
+            },
+            employedDate: ‘2014-04-01’,
+            department: ‘sales’,
+            title:‘部长’,
+            role: ‘sales’
+        }
+        
+## department [/department/{id}]
++ Parameters
+    + id (required, String, `20140401`) ... 要处理的员工`id`
+
+### 编辑员工信息 [PUT]
+
+ + request Content-Type: application/json
+ 
+        {
+            "content": "Updated file contents"
+        }
+
+ + response 200 (application/json)
+ 
+        {
+            id: ‘20140102’,
+            name: 孔明,
+            gender:'男',
+            email: zhuge@gmail.com,
+            username: zhugeliang,
+            hashed_password: ‘dshjfghjsgdsghdjsk’,
+            provider: ‘local’,
+            salt: ‘hjhgjskdjghkj’,
+            birthday: 1990-01-01,
+            address: {
+                province: ‘辽宁’,
+                city: 大连,
+                distinct: ‘甘井子区’,
+                street: ‘松江路109’,
+                zip: ‘116022’
+            },
+            employedDate: ‘2014-04-01’,
+            department: ‘sales’,
+            title:‘销售员’,
+            role: ‘sales’
+        }]
+
+
+### 解雇员工 [DELETE]
+ + Response 204
+
+
+# Group Roles
+
+# Group Categores
+
+# Group Inventories
+
+# Group BOM
+
+# Group Stations
+
+# Group Operations
+
+# Group Customers
+
+# Group Supplier
+
+
+
+# Group SOs
+SOs related resources of the **SOs API**
+
+## SOs Collection [/SOs]
+### List all SOs [GET]
++ Response 200 (application/json)
+
+        [{
+          "id": 1, "title": "Jogging in park"
+        }, {
+          "id": 2, "title": "Pick-up posters from post-office"
+        }]
+
+### Create a SO [POST]
++ Request (application/json)
+
+        { "title": "Buy cheese and bread for breakfast." }
+
++ Response 201 (application/json)
+
+        { "id": 3, "title": "Buy cheese and bread for breakfast." }
+
+## SO [/SOs/{id}]
+A single SO object with all its details
+
++ Parameters
+    + id (required, number, `1`) ... Numeric `id` of the SO to perform action with. Has example value.
+
+### Retrieve a SO [GET]
++ Response 200 (application/json)
+
+    + Header
+
+            X-My-Header: The Value
+
+    + Body
+
+            { "id": 2, "title": "Pick-up posters from post-office" }
+
+### Cancel a SO [DELETE]
++ Response 204
+
+# Group MOs
+
+# Group POs
+
