@@ -74,7 +74,13 @@ MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉
  * 指定员工角色（role）。
  * id格式：**雇佣年月（YYYYMM）+流水（00）**
 
-## 员工 [/employee]
+## 员工 [/employee{?depart}]
+where fired null
+
+ + parameters
+    + depart (optional String) ... 所属部门ID
+ 
+
 ### 员工列表 [GET]
 + request  
 
@@ -179,7 +185,40 @@ MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉
         
 ## 员工 [/employee/{id}]
 + Parameters
-    + id (required, String, `20140401`) ... 要处理的员工`id`
+    + id (required, String, `20140401`) ... 员工`id`
+
+### 获取员工信息 [GET]
+
+ + request Content-Type: application/json
+ 
+        {
+            "content": "Updated file contents"
+        }
+
+ + response 200 (application/json)
+ 
+        {
+            id: ‘20140102’,
+            name: 孔明,
+            gender:'男',
+            email: zhuge@gmail.com,
+            username: zhugeliang,
+            hashed_password: ‘dshjfghjsgdsghdjsk’,
+            provider: ‘local’,
+            salt: ‘hjhgjskdjghkj’,
+            birthday: 1990-01-01,
+            address: {
+                province: ‘辽宁’,
+                city: 大连,
+                distinct: ‘甘井子区’,
+                street: ‘松江路109’,
+                zip: ‘116022’
+            },
+            employedDate: ‘2014-04-01’,
+            department: ‘sales’,
+            title:‘销售员’,
+            role: ‘sales’
+        }]
 
 ### 编辑员工信息 [PUT]
 
@@ -282,7 +321,7 @@ MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉
         
 ## department [/department/{id}]
 + Parameters
-    + id (required, String, `salse`) ... 部门`id`
+    + id (required, String, `sales`) ... 部门`id`
 
 ### 编辑部门信息 [PUT]
 
@@ -307,13 +346,14 @@ MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉
         }
 
 
-### 停用部门 [DELETE]
+### 撤销部门 [DELETE]
  + Response 204
 
 
 # Group Roles
 规定角色可用菜单。
 为员工分派角色。todo _员工/部门_的缺省角色
+
 
 # Group Categores
 
