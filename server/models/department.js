@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
 var DepartSchema = new Schema({
     //code
     _id: String,
+    name:String,
     path: String,
     description: String,
     created: {
