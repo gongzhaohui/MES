@@ -312,6 +312,8 @@ MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉
 
 
 # Group Roles
+规定角色可用菜单。
+为员工分派角色。todo _员工/部门_的缺省角色
 
 # Group Categores
 
@@ -327,51 +329,25 @@ MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉
 
 # Group Supplier
 
-
-
 # Group SOs
-SOs related resources of the **SOs API**
-
-## SOs Collection [/SOs]
-### List all SOs [GET]
-+ Response 200 (application/json)
-
-        [{
-          "id": 1, "title": "Jogging in park"
-        }, {
-          "id": 2, "title": "Pick-up posters from post-office"
-        }]
-
-### Create a SO [POST]
-+ Request (application/json)
-
-        { "title": "Buy cheese and bread for breakfast." }
-
-+ Response 201 (application/json)
-
-        { "id": 3, "title": "Buy cheese and bread for breakfast." }
-
-## SO [/SOs/{id}]
-A single SO object with all its details
-
-+ Parameters
-    + id (required, number, `1`) ... Numeric `id` of the SO to perform action with. Has example value.
-
-### Retrieve a SO [GET]
-+ Response 200 (application/json)
-
-    + Header
-
-            X-My-Header: The Value
-
-    + Body
-
-            { "id": 2, "title": "Pick-up posters from post-office" }
-
-### Cancel a SO [DELETE]
-+ Response 204
 
 # Group MOs
 
 # Group POs
+
+# Group scheduling
+
+# Group progress
+
+# Group QC
+
+# Group inbound
+
+# Group outbound
+
+# Group invoice
+
+# Group receipt
+
+# Group queries
 
