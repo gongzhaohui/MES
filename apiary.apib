@@ -231,60 +231,38 @@ MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉
         [{
             id: ‘sales’,
             name: 销售部,
-            officer:'
-            path: String,
+            officer:'20140401'
+            path: '/salses',
             description: String,
             created: {
-                date: {type: Date, default: Date.now},
-                eId: {type: String, ref: 'Employee'}
+                date: 2014-04-25,
+                eId: '20140401'
             }
-        }, {
-            id: '20140102’,
-            name: 孔明,
-            gender:'男',
-            email: zhuge@gmail.com,
-            username: zhugeliang,
-            hashed_password: ‘dshjfghjsgdsghdjsk’,
-            provider: ‘local’,
-            salt: ‘hjhgjskdjghkj’,
-            birthday: 1990-01-01,
-            address: {
-                province: ‘辽宁’,
-                city: 大连,
-                distinct: ‘甘井子区’,
-                street: ‘松江路109’,
-                zip: ‘116022’
-            },
-            employedDate: ‘2014-04-01’,
-            department: ‘sales’,
-            title:‘销售员’,
-            role: ‘sales’
+        },{
+            id: ‘sales01’,
+            name: 销售1科,
+            officer:'20140401'
+            path: '/salses/sales01',
+            description: String,
+            created: {
+                date: 2014-04-25,
+                eId: '20140401'
+            }
         }]
         
-### 增加员工 [POST]
+### 增加部门 [POST]
 + Request (application/json)
 
         {
-            id: ‘20140103’,
-            name: 关羽,
-            gender:'男',
-            email: guan@gmail.com,
-            username: guanyu,
-            hashed_password: ‘dshjfghjsgdsghdjsk’,
-            provider: ‘local’,
-            salt: ‘hjhgjskdjghkj’,
-            birthday: 1990-01-01,
-            address: {
-                province: ‘辽宁’,
-                city: 大连,
-                distinct: ‘甘井子区’,
-                street: ‘松江路107’,
-                zip: ‘116022’
-            },
-            employedDate: ‘2014-04-01’,
-            department: ‘sales’,
-            title:‘部长’,
-            role: ‘sales’
+            id: ‘manufacturing’,
+            name: 制造部,
+            officer:'20140402'
+            path: '/manufacturing',
+            description: String,
+            created: {
+                date: 2014-04-25,
+                eId: '20140401'
+            }
         }
 
 + Response 201 (application/json)
