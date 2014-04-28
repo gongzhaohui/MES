@@ -11,6 +11,7 @@ var DepartSchema = new Schema({
     //code
     _id: String,
     name:String,
+    officer:{type:String,ref:'Employee'},
     path: String,
     description: String,
     created: {
@@ -29,7 +30,7 @@ DepartSchema.statics = {
         this.findOne({
             _id: id
         })
-            .populate('created.eid')
+            .populate('created.eid','username _id')
             .exec(cb);
     }
 };

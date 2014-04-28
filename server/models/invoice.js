@@ -10,7 +10,12 @@ var InvoiceItemSchema = new Schema({
     source: String,
     iId: {type: String, ref: 'Inventory'},
     qty: Number,
-    price: Number
+    price: {
+        nontax: Number,
+        dutiable: Number,
+        taxRate: Number
+    },
+    status: {type: String, ref: 'Status'}
 });
 var InvoiceSchema = new Schema({
     _id: String,
@@ -18,9 +23,10 @@ var InvoiceSchema = new Schema({
     operator: {type: String, ref: 'Employee'},
     cId: {type: String, ref: 'Employee'},
     items: [InvoiceItemSchema],
-    amount: Number,
-    receipted:Number,
-    Status: {type: String, ref: 'Status'},
+    iAmount: Number,
+    accomplished: Number,
+    direction: Boolean,
+    status: {type: String, ref: 'Status'},
     created: {
         date: {type: Date, default: Date.now},
         eId: {type: String, ref: 'Employee'}

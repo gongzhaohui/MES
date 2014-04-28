@@ -16,8 +16,16 @@ var InventorySchema = new Schema({
     toolNo: {type: String, unique: true},
     drawingNo: {type: String, unique: true},
     pricing: {
-        cost: {type: Number, default: 0},
-        price: {type: Number, default: 0}
+        cost: {
+            nontax: Number,
+            dutiable: Number,
+            tax: Number
+        },
+        price: {
+            nontax: Number,
+            dutiable: Number,
+            taxRate: Number
+        }
     },
     category: {type: String, ref: 'Category', index: true},
     way: {type: String, ref: 'Way'},

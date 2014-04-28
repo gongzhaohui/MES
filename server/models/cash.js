@@ -13,7 +13,8 @@ var ReceiptSchema = new Schema({
     cId: {type: String, ref: 'Customer'},
     iId: {type: String, ref: 'Invoice'},
     iAmount: Number,
-    rAmount: Number,
+    amount: Number,
+    direction:Boolean,
     Status: {type: String, ref: 'Status'},
     created: {
         date: {type: Date, default: Date.now},

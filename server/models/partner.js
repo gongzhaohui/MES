@@ -6,8 +6,9 @@
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
-var SupplierSchema = new Schema(
+var PartnerSchema = new Schema(
     {
+        //code six digits
         _id: String,
         name: {
             type: String,
@@ -47,8 +48,12 @@ var SupplierSchema = new Schema(
             photo: String,
             hobbies: [String]
         },
+        relation:{
+            consumer:Boolean,
+            supplier:Boolean
+        },
         rating: {type: String, ref: 'creditrating'},
-        buyer: {type: String, ref: 'Employee'},
+        salesman: {type: String, ref: 'Employee'},
         created: {
             date: {type: Date, default: Date.now},
             eId: {type: String, ref: 'Employee'}
@@ -61,14 +66,21 @@ var SupplierSchema = new Schema(
         ]
     });
 
-
+/**
+ * Validations
+ */
+/*
+ PartnerSchema.path('controller').validate(function (controller) {
+ return controller.length;
+ }, 'Controller cannot be blank');
+ */
 /**
  * Statics
  */
-SupplierSchema.statics.load = function (id, cb) {
+PartnerSchema.statics.load = function (id, cb) {
     this.findOne({
         _id: id
     }).populate('salesman', '_id username').exec(cb);
 };
 
-mongoose.model('Supplier', SupplierSchema);
+mongoose.model('Partner', PartnerSchema);
