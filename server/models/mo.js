@@ -5,6 +5,7 @@
  * todo
  * 更新履历
  * 订单类型？
+ * move operation to task ref
  */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
@@ -17,6 +18,8 @@ var OperationSchema = new Schema({
     jobtime: Number,
     carrytime:Number,
     comment: String,
+    mustbefore:Number,
+    mustafter:Number,
     startDate: Date,
     dueDate: Date,
     receive: {

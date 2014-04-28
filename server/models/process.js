@@ -6,18 +6,19 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
+var OperationSchema = new Schema({
+    row: Number,
+    station: String,
+    job: String,
+    tasktime: Number,
+    mustBefore:Number,
+    mustAfter:Number,
+    comment: String
+});
 var ProcessSchema = new Schema({
     iId: {type: String, ref: 'Inventory'},
     date: Date,
-    Operations: [
-        {
-            row: Number,
-            station: String,
-            job: String,
-            tasktime: Number,
-            comment: String
-        }
-    ],
+    Operations: [OperationSchema ],
     created: {
         date: {type: Date, default: Date.now},
         eId: {type: String, ref: 'Employee'}
