@@ -33,5 +33,10 @@ exports={
 
      */
     remove: function (req, res) {
+    },
+    /* todo
+
+     */
+    getBOM: function (req, res) {
     }
 };

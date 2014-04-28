@@ -8,11 +8,13 @@ var mongoose = require('mongoose'),
 
 var OperationSchema = new Schema({
     row: Number,
-    station: String,
-    job: String,
-    tasktime: Number,
     mustBefore:Number,
     mustAfter:Number,
+    station: String,
+    job: String,
+    setuptime:Number,
+    tasktime: Number,
+    carrytime:Number,
     comment: String
 });
 var ProcessSchema = new Schema({

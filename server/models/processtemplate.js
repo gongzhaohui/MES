@@ -7,15 +7,16 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var ProcessTemplateSchema = new Schema({
-    id: String,
-    name: {type: String, unique: true},
+    name: {type: String, unique: true,index:true},
     Operations: [
         {
             row: Number,
+            mustBefore:Number,
+            mustAfter:Number,
             station: String,
             job: String,
             setuptime:Number,
-            jobtime: Number,
+            tasktime: Number,
             carrytime:Number,
             comment: String
         }

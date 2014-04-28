@@ -21,17 +21,19 @@ var jobSchema = new Schema({
 });
 */
 var TaskSchema = new Schema({
-    _id: String,
     source: String, //source=moId.moRow.opRow
     station: {type: String, ref: 'station'},
-    task: String,
+    job: String,
+    mustBefore:Number,
+    mustAfter:Number,
+    comment: String,
     status:{type:String,ref:'Status'},
     order: {
         start:Date,
         durDate:Date,
         qty: Number,
         setuptime:Number,
-        jobtime: Number,
+        tasktime: Number,
         carrytime:Number,
         comment: String
     },

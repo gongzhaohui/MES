@@ -70,7 +70,6 @@ var MOSchema = new Schema({
     _id: String,
     eId: {type: String, ref: 'Employee'},
     moDate: {type: Date, index: true},
-    deuDate: {type: Date, index: true},
     Status: {type: String, ref: 'Status', index: true},
     items: [MOItemSchema],
     created: {

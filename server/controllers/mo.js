@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
     MO= mongoose.model('MO'),
     Status = mongoose.model('Status'),
     PO=require('./po'),
+    Process= mongoose.model('Process'),
     Outbound=require('./outbound'),
     _ = require('lodash');
 
@@ -30,6 +31,14 @@ exports = {
      * reserve station time
     */
     create: function () {
+        var mo=new MO(req.body);
+        mo.created.date=Date.now;
+        mo.created.eId=req.user._id;
+        forEach (inv in mo.items)
+        {
+            var way=  inv.way;
+            Process.load()
+        }
     },
     /*
     * todo
