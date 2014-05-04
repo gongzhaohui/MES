@@ -33,7 +33,7 @@ var OrderSchema = new Schema({
     cId: {type: String, ref: 'Customer', index: true},
     //Order,po
     orderType:String,
-    //Order:test,regular,claim;//po;regular,outOrderurcing
+    //Order:test,regular,claim;//po;regular,outsourcing
     voucherType:String,
     deuDate: {type: Date, index: true},
     //taxed

@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Depart = mongoose.model('Depart'),
+    Inventory = mongoose.model('Inventory'),
     User = mongoose.model('Employee'),
     _ = require('lodash');
 
@@ -37,6 +37,7 @@ exports={
     /* todo
 
      */
-    getBOM: function (req, res) {
+    getBOM: function (inv,req, res) {
+        //var inventory=
     }
 };

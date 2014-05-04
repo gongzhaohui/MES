@@ -47,6 +47,16 @@ var InventorySchema = new Schema({
         }
     ]
 });
-InventorySchema.statics = {};
+InventorySchema.statics = {
+    expandBOM:function(soitem,cb){
+        var inv=soitem.iId;
+        var qty=soitem.qty.ordered;
+        var ancestor=soitem;
+        var bom=[];
+        bom.push(ancestor);
+        var getChildren=function(soItem){};
+
+    }
+};
 InventorySchema.methods = {};
 mongoose.model('Inventory', InventorySchema);
