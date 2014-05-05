@@ -1,11 +1,8 @@
 'use strict';
-
-
 /**
  * exports
  *
  */
-
 exports.test = function (req, res) {
 
     var assert = require('assert');
@@ -21,7 +18,7 @@ exports.test = function (req, res) {
     console.log('dbname: %s', dbname);
     var db = mongoose.connection;
     var db2 = db.useDb(dbname);
-    console.log('dbname: %s', db2.dbName);
+    console.log('dbname: %s', db2.name);
 
     /*  mongoose.connect('localhost', dbname);
      mongoose.connection.on('error', function () {
@@ -54,7 +51,7 @@ exports.test = function (req, res) {
     });
 
     users.push({
-        _id: userIds[5], name: 'child5'
+        _id: userIds[5], name: 'child5', children: [userIds[11]]
     });
     users.push({
         _id: userIds[6], name: 'child6'
@@ -65,12 +62,70 @@ exports.test = function (req, res) {
     users.push({
         _id: userIds[8], name: 'child8'
     });
+    users.push({
+        _id: userIds[9], name: 'child9'
+    });
+    users.push({
+        _id: userIds[10], name: 'child10'
+    });
+    users.push({
+        _id: userIds[11], name: 'child11'
+    });
+
 
     User.create(users, function (err, docs) {
         assert.ifError(err);
+        console.log(docs);
         var BOM=[];
-
-        var getChildren=function(parent,lvl){
+        var root=userIds[0];
+// keep track of recursion count
+        var count = 0;
+// to be called when recursion is completed
+        function out(obj) {
+            BOM.push(obj);
+        }
+        function last() {
+            res.jsonp(BOM);
+              User.remove( function(err) {
+                console.log('collection removed')
+            });
+        }
+// call 'last' when count is 0
+        var done = function() {
+            if (count==0) last();
+        };
+// the recursive function
+        function recurse(parent,lvl) {
+            count++;
+            out({lvl:lvl,user:parent});
+            console.log(parent);
+            User.find({ _id: ObjectId(String(parent)) }, function(user) {
+                console.log(user,user.children.length)
+                if(user){
+                    console.log(user,user.children.length)
+                lvl++;
+                if(user.children.length>0) {
+                    for (var i = 0; i < user.children.length; i++) {
+                        recurse(user.children[i], lvl);
+                    }
+                }else {
+                    out({lvl:lvl,user:user._id});
+                }}
+                count--;
+                done();
+            });
+            // simiulate an asyncrhonous call to get children
+           // setTimeout(walk, wait);
+        }
+// kick off the recursion
+        function run() {
+            console.log('entering run');
+            recurse(root,0);
+            console.log('leaving run');
+        }
+// and begin
+        run();
+ /*       var getChildren=function(parent,lvl){
              var promise=User.find({ name: parent }).lean().exec();
             promise.then(function(inv){
                 BOM.push({lvl:lvl,parent:inv.name});
@@ -100,9 +155,6 @@ exports.test = function (req, res) {
                   done();
               })
           })
-         function out(s) {
-         $("#out").append(s+'\n');
-         }
 
          /* tree visualization
          root
@@ -125,39 +177,7 @@ exports.test = function (req, res) {
         var a = { id:1, len:1, children: [b,e]};
         var root = {id:0, len:0, children: [a,g]};
 
-// keep track of recursion count
-        var count = 0;
-// to be called when recursion is completed
-        function last() {
-            out('this should be last');
-        }
-// call 'last' when count is 0
-        var done = function() {
-            if (count==0) last();
-        }
-// the recursive function
-        function recurse(node) {
-            count++;
-            out(node.id);
-            var wait = node.len * 100;
-            var walk = function() {
-                for (var i=0; i<node.children.length; i++) {
-                    recurse(node.children[i]);
-                }
-                count--;
-                done();
-            }
-            // simiulate an asyncrhonous call to get children
-            setTimeout(walk, wait);
-        }
-// kick off the recursion
-        function run() {
-            out('entering run');
-            recurse(root);
-            out('leaving run');
-        }
-// and begin
-        run();
+
         */
 
     });
