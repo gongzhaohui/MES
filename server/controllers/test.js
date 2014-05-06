@@ -3,7 +3,7 @@
  * exports
  *
  */
-exports.test = function (req, res) {
+exports.testRecursive = function (req, res) {
 
     var assert = require('assert');
     var mongoose = require('mongoose');
@@ -27,21 +27,21 @@ exports.test = function (req, res) {
      */
     var user = new Schema({
         name: String, children: [
-            { type: Schema.ObjectId, ref: 'User1' }
+            { seq:Number,child:{type: Schema.ObjectId, ref: 'User'} ,qty:Number}
         ]
     });
-    var User = db2.model('User1', user);
+    var User = db2.model('User', user);
     var userIds = [new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId];
     var users = [];
 
     users.push({
-        _id: userIds[0], name: 'p0', children: [userIds[1], userIds[2], userIds[3]]
+        _id: userIds[0], name: 'p0', children: [{seq:1,child:userIds[1],qty:2}, {seq:2,child:userIds[2],qty:2}, {seq:3,child:userIds[3],qty:3}]
     });
     users.push({
-        _id: userIds[1], name: 'child1', children: [userIds[4]]
+        _id: userIds[1], name: 'child1', children: [{seq:1,child:userIds[4],qty:2}]
     });
     users.push({
-        _id: userIds[2], name: 'child2', children: [userIds[5], userIds[6], userIds[7]]
+        _id: userIds[2], name: 'child2', children: [{seq:1,child:userIds[5],qty:2}, {seq:2,child:userIds[6],qty:2}, {seq:3,child:userIds[7],qty:1}]
     });
     users.push({
         _id: userIds[3], name: 'child3'
@@ -51,7 +51,7 @@ exports.test = function (req, res) {
     });
 
     users.push({
-        _id: userIds[5], name: 'child5', children: [userIds[11]]
+        _id: userIds[5], name: 'child5', children:[{seq:1,child:userIds[11],qty:2}]
     });
     users.push({
         _id: userIds[6], name: 'child6'
@@ -75,9 +75,8 @@ exports.test = function (req, res) {
 
     User.create(users, function (err, docs) {
         assert.ifError(err);
-        console.log(docs);
         var BOM=[];
-        var root=userIds[0];
+        var root='p0';
 // keep track of recursion count
         var count = 0;
 // to be called when recursion is completed
@@ -86,7 +85,9 @@ exports.test = function (req, res) {
         }
         function last() {
             res.jsonp(BOM);
-              User.remove( function(err) {
+  //          console.log(User);
+
+            User.remove( function(err) {
                 console.log('collection removed')
             });
         }
@@ -95,23 +96,27 @@ exports.test = function (req, res) {
             if (count==0) last();
         };
 // the recursive function
-        function recurse(parent,lvl) {
+        function recurse(parent,lvl,qty,seq) {
             count++;
-            out({lvl:lvl,user:parent});
-            console.log(parent);
-            User.find({ _id: ObjectId(String(parent)) }, function(user) {
-                console.log(user,user.children.length)
-                if(user){
-                    console.log(user,user.children.length)
-                lvl++;
-                if(user.children.length>0) {
-                    for (var i = 0; i < user.children.length; i++) {
-                        recurse(user.children[i], lvl);
+ //           out({lvl:lvl,user:parent});
+            //console.log(parent);
+            User.findOne({ name: parent}).lean().populate({path:'children.child',select:'name'}).exec(function(err,user) {
+                console.log('finded',user);
+                if (user) {
+                    seq=lvl==0?'1':seq;
+                    out({lvl: lvl, user: user.name,seq:seq ,qty:qty});
+//                    console.log(user, user.children.length);
+                   lvl++;
+                    if (user.children.length > 0) {
+                        for (var i = 0; i < user.children.length; i++) {
+
+                            recurse(user.children[i].child.name, lvl,qty*user.children[i].qty,seq+'.'+user.children[i].seq);
+                        }
                     }
-                }else {
-                    out({lvl:lvl,user:user._id});
-                }}
+                    lvl--;
+                }
                 count--;
+                console.log('lvl',lvl);
                 done();
             });
             // simiulate an asyncrhonous call to get children
@@ -120,7 +125,7 @@ exports.test = function (req, res) {
 // kick off the recursion
         function run() {
             console.log('entering run');
-            recurse(root,0);
+            recurse(root,0,2,1);
             console.log('leaving run');
         }
 // and begin
@@ -185,14 +190,116 @@ exports.test = function (req, res) {
 
     function done(err) {
         if (err) console.error(err.stack);
-        User.remove({}, function(err) {
-            console.log('collection removed')
+        User.find({ name: 'p0'}).populate({path:'children',select:'name'}).exec(function(user) {
+            console.log(user);
         });
+             //       User.remove({}, function(err) {
+   //         console.log('collection removed')
+     //   });
 
     }
 };
 /* todo
  */
+
+exports.testPromise = function (req, res) {
+    /*var list = ['a', 'b', 'c', 'd', 'e'];
+
+    var execute = function (x) {
+        var d = $.Deferred();
+
+        console.log('Begin ' + x);
+
+        setTimeout(function () {
+            console.log('End ' + x);
+            d.resolve();
+        }, 1000);
+
+        return d;
+    };
+
+
+    (function recurse(i, l) {
+        execute(l[i]).then(function () {
+            if (i + 1 < l.length) {
+                recurse(i + 1, l);
+            }
+        });
+    })(0, list);*/
+    var assert = require('assert');
+    var mongoose = require('mongoose');
+    var Schema = mongoose.Schema;
+    var ObjectId = mongoose.Types.ObjectId;
+    var dbname = 'testing_populateAdInfinitum';
+    var db = mongoose.connection;
+    var db2 = db.useDb(dbname);
+    console.log('dbname: %s', db2.name);
+
+    var user = new Schema({
+        name: String, children: [
+            { seq:Number,child:{type: Schema.ObjectId, ref: 'User'} ,qty:Number}
+        ]
+    });
+    var User = db2.model('User', user);
+    var userIds = [new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId];
+    var users = [];
+
+    users.push({
+        _id: userIds[0], name: 'p0', children: [{seq:1,child:userIds[1],qty:2}, {seq:2,child:userIds[2],qty:2}, {seq:3,child:userIds[3],qty:3}]
+    });
+    users.push({
+        _id: userIds[1], name: 'child1', children: [{seq:1,child:userIds[4],qty:2}]
+    });
+    users.push({
+        _id: userIds[2], name: 'child2', children: [{seq:1,child:userIds[5],qty:2}, {seq:2,child:userIds[6],qty:2}, {seq:3,child:userIds[7],qty:1}]
+    });
+    users.push({
+        _id: userIds[3], name: 'child3'
+    });
+    users.push({
+        _id: userIds[4], name: 'child4'
+    });
+
+    users.push({
+        _id: userIds[5], name: 'child5', children:[{seq:1,child:userIds[11],qty:2}]
+    });
+    users.push({
+        _id: userIds[6], name: 'child6'
+    });
+    users.push({
+        _id: userIds[7], name: 'child7'
+    });
+    users.push({
+        _id: userIds[8], name: 'child8'
+    });
+    users.push({
+        _id: userIds[9], name: 'child9'
+    });
+    users.push({
+        _id: userIds[10], name: 'child10'
+    });
+    users.push({
+        _id: userIds[11], name: 'child11'
+    });
+    User.create(users, function (err, docs) {
+        var bom=[];
+        var getChildren=function(parent,qty,lvl) {
+            var promise = User.find({ name: parent }).lean().exec();
+            promise.then(function (inv) {
+                bom.push({lvl: lvl, parent: inv.name});
+                if (inv.children.exists) {
+                    lvl++;
+                    children.each(function (child) {
+                        getChildren(child.name, lvl)
+                    })
+                }
+            })
+        }
+    });
+
+};
+
+
 exports.create = function (req, res) {
 };
 /* todo
