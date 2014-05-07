@@ -282,19 +282,32 @@ exports.testPromise = function (req, res) {
         _id: userIds[11], name: 'child11'
     });
     User.create(users, function (err, docs) {
-        var bom=[];
-        var getChildren=function(parent,qty,lvl) {
-            var promise = User.find({ name: parent }).lean().exec();
-            promise.then(function (inv) {
-                bom.push({lvl: lvl, parent: inv.name});
-                if (inv.children.exists) {
+       var bom=[];
+        var Q=require('q');
+        var getChildren=function(lvl,parent,qty,bom,seq){
+        return User.find({ name: parent }).lean().populate({path:'children.child',select:'name'}).exec().then(function(err,inv) {
+            return Q.all(function(inv) {
+                seq=seq||'0';
+                bom.push({lvl: lvl,seq:seq, parent: inv.name,qty:qty});
+                if (inv.children.length>0) {
                     lvl++;
                     children.each(function (child) {
-                        getChildren(child.name, lvl)
-                    })
+                        return getChildren(lvl,child.name,qty*child.qty,bom,seq+'.'+child.seq)
+                    });
+
+                    lvl--;
+                }else {
+                    return null
                 }
-            })
-        }
+
+            });
+        });
+        };
+
+        getChildren(0,'p0',2,bom).all(function(err){
+            res.jsonp(bom);
+        });
+
     });
 
 };

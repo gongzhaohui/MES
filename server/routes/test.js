@@ -5,7 +5,7 @@ var test = require('../controllers/test');
 
 module.exports = function(app, passport) {
 
-    app.get('/test', test.test);
+    app.get('/test', test.testPromise);
 
 
 };
