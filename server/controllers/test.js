@@ -283,19 +283,22 @@ exports.testPromise = function (req, res) {
     });
     User.create(users, function (err, docs) {
        var bom=[];
+        var Q=require('q');
+
         var getChildren=function(lvl,parent,qty,bom,seq){
-         User.find({ name: parent }).lean().populate({path:'children.child',select:'name'}).exec().then(function(err,inv) {
+         var defer= Q.defer();
+            defer.promise=User.find({ name: parent }).lean().populate({path:'children.child',select:'name'}).exec();
+         return defer.promise.then(function(err,inv) {
                 seq=seq||'0';
                 bom.push({lvl: lvl,seq:seq, parent: inv.name,qty:qty});
-            console.log(lvl);
+                console.log(lvl);
                 if (inv.children.length>0) {
                     lvl++;
-                    children.each(function (child) {
+                    return Q.all(children.map(function (child) {
                         return getChildren(lvl,child.name,qty*child.qty,bom,seq+'.'+child.seq)
-                    });
-
-                    lvl--;
+                    }));
                 }else {
+                    lvl--;
                     return null
                 }
 
@@ -306,7 +309,7 @@ exports.testPromise = function (req, res) {
         getChildren(0,'p0',2,bom).then(function(err){
             res.jsonp(bom);
         });
-
+//        res.jsonp(bom);
     });
 
 };
