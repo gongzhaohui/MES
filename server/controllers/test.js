@@ -31,7 +31,7 @@ exports.testRecursive = function (req, res) {
         ]
     });
     var User = db2.model('User', user);
-    var userIds = [new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId];
+    var userIds = [new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId()];
     var users = [];
 
     users.push({
@@ -88,12 +88,12 @@ exports.testRecursive = function (req, res) {
   //          console.log(User);
 
             User.remove( function(err) {
-                console.log('collection removed')
+                console.log('collection removed');
             });
         }
 // call 'last' when count is 0
         var done = function() {
-            if (count==0) last();
+            if (count===0) last();
         };
 // the recursive function
         function recurse(parent,lvl,qty,seq) {
@@ -103,7 +103,7 @@ exports.testRecursive = function (req, res) {
             User.findOne({ name: parent}).lean().populate({path:'children.child',select:'name'}).exec(function(err,user) {
                 console.log('finded',user);
                 if (user) {
-                    seq=lvl==0?'1':seq;
+                    seq=lvl===0?'1':seq;
                     out({lvl: lvl, user: user.name,seq:seq ,qty:qty});
 //                    console.log(user, user.children.length);
                    lvl++;
@@ -241,7 +241,7 @@ exports.testPromise = function (req, res) {
         ]
     });
     var User = db2.model('User', user);
-    var userIds = [new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId, new ObjectId];
+    var userIds = [new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId(), new ObjectId()];
     var users = [];
 
     users.push({
@@ -294,12 +294,12 @@ exports.testPromise = function (req, res) {
                 console.log(lvl);
                 if (inv.children.length>0) {
                     lvl++;
-                    return Q.all(children.map(function (child) {
-                        return getChildren(lvl,child.name,qty*child.qty,bom,seq+'.'+child.seq)
+                    return Q.all(inv.children.map(function (child) {
+                        return getChildren(lvl,child.name,qty*child.qty,bom,seq+'.'+child.seq);
                     }));
                 }else {
                     lvl--;
-                    return null
+                    return null;
                 }
 
             });

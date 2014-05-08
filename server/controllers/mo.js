@@ -30,15 +30,16 @@ exports = {
      * create po(purchasing items),outbound(stocked items),task(manufacturing items)
      * reserve station time
     */
-    create: function () {
+    create: function (req,res) {
         var mo=new MO(req.body);
         mo.created.date=Date.now;
         mo.created.eId=req.user._id;
-        forEach (inv in mo.items)
+        mo.items.each(function(item){
         {
-            var way=  inv.way;
-            Process.load()
+            var way=  item.way;
+            Process.load();
         }
+        });
     },
     /*
     * todo

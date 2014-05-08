@@ -37,7 +37,7 @@ exports = {
                 return res.send('so/create', {
                     errors: err.errors,
                     so: so
-                })
+                });
             }
             else {
 

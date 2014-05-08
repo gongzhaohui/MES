@@ -108,5 +108,5 @@ exports.user = function (req, res, next, id) {
             if (!user) return next(new Error('Failed to load User ' + id));
             req.profile = user;
             next();
-        })
+        });
 };

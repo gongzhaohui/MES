@@ -43,7 +43,8 @@ module.exports = function(grunt) {
             all: {
                 src: paths.js,
                 options: {
-                    jshintrc: true
+                    jshintrc: true,
+                    force:true
                 }
             }
         },

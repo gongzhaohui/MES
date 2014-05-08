@@ -47,7 +47,7 @@ exports.update = function (req, res) {
     var depart = req.depart;
 
     depart = _.extend(depart, req.body);
-    var update = {date: Date.now(), eId: req.user._id}
+    var update = {date: Date.now(), eId: req.user._id};
     depart.updated.$push(update);
     depart.save(function (err) {
         if (err) {

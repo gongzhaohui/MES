@@ -18,11 +18,12 @@ CounterSchema.statics = {
     getNewId: function (code, inc, callback) {
         var i = inc ? inc : 1;
         this.findOneAndUpdate({ _id: code }, { $inc: { seq: i } }, {new: true, upsert: true}, function(err, result){
+            var newId= '';
             if (!err) {
                 var seqStr = '000000000' + result.seq;
-                var newId= code+seqStr.slice(seqStr.length - 9)
+                newId= code+seqStr.slice(seqStr.length - 9);
             }
-            callback(err,newId)
+            callback(err,newId);
         });
     }
 };
