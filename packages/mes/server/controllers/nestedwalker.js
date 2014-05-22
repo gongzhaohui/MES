@@ -1,4 +1,6 @@
 /**
+ * BOM spreader
+ *
  * referred Async Walker By bfricka
  * 2014-5-22
  * Gong
@@ -22,12 +24,12 @@ var pathsep='.';
 /**
  * Main module function. Performs all async walking
  * @param  {string} model               - model to walk
- * @param  {string} base               - Path to walk
+ * @param  {string} base               - {field,value,serial,quantity}
  * @param  {object|function} [config] - Optional config object or callback
  * @param  {boolean} [assemblyMode]  - Optional param to indicate directory instead of file mode
  * @return {object}                   - Q.promise that resolves to results array.
  */
-function asyncWalker(model,base, config, assemblyMode) {
+function bomSpreader(model,base, config, assemblyMode) {
     var defaults = _.clone(defaultConfig);
 
     if (config) {
@@ -51,7 +53,7 @@ function asyncWalker(model,base, config, assemblyMode) {
 
     /**
      * Get current path depth
-     * @param  {string} dir - Directory path
+     * @param  {string} path - BOM path
      * @return {number}     - Current depth
      */
     function getDepth(path) {
@@ -67,14 +69,15 @@ function asyncWalker(model,base, config, assemblyMode) {
      * @param  {string} fieldValue - Qualified value to search
      * @return {object}     - Promise
      */
-    function walkAsync(fieldValue,path) {
+    function walkAsync(base) {
         var skip = false;
         var deferred = q.defer();
-        path=path||'';
+
+        path=base.serial||'';
         if (hasRecursionLimits) {
             var currentDepth = getDepthFromBase(path);
             if (hasMaxDepth && currentDepth >= config.maxDepth) {
-                console.warn(chalk.yellow("Reached max depth (%d) in: " + dir), config.maxDepth);
+                console.warn(chalk.yellow("Reached max depth (%d) in: " + path+':'+base.name), config.maxDepth);
                 skip = true;
             }
 
@@ -87,7 +90,7 @@ function asyncWalker(model,base, config, assemblyMode) {
         if (skip) {
             deferred.resolve(void 0);
         } else {
-            readDoc(model,field,fieldValue)
+            readDoc(base)
                 .then(statItems)
                 .then(getFiles)
                 .then(function(a) {
@@ -107,7 +110,7 @@ function asyncWalker(model,base, config, assemblyMode) {
      * @param  {string} fieldValue - Qualified value to search
      * @return {object}     - fs.readDoc wrapped in a promise
      */
-    function readDoc(fieldValue) {
+    function readDoc(base) {
         return q
             .nfapply(fs.readdir, [dir])
             .then(function(list) {
@@ -199,7 +202,7 @@ function asyncWalker(model,base, config, assemblyMode) {
         });
     }
 
-    return walkAsync(fieldValue,path);
+    return walkAsync(base);
 }
 
 (function(aw) {
@@ -227,6 +230,6 @@ function asyncWalker(model,base, config, assemblyMode) {
         var mapFn = _createMapFn(callback);
         return aw(dir, mapFn);
     };
-}(asyncWalker));
+}(bomSpreader));
 
-module.exports = asyncWalker;
+module.exports = bomSpreader;
