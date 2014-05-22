@@ -22,13 +22,12 @@ var pathsep='.';
 /**
  * Main module function. Performs all async walking
  * @param  {string} model               - model to walk
- * @param  {string} fieldValue               - Path to walk
- * @param  {string} fieldValue               - Path to walk
+ * @param  {string} base               - Path to walk
  * @param  {object|function} [config] - Optional config object or callback
  * @param  {boolean} [assemblyMode]  - Optional param to indicate directory instead of file mode
  * @return {object}                   - Q.promise that resolves to results array.
  */
-function asyncWalker(model,field,fieldValue, config, assemblyMode) {
+function asyncWalker(model,base, config, assemblyMode) {
     var defaults = _.clone(defaultConfig);
 
     if (config) {
