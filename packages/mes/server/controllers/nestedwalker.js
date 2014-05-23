@@ -4,6 +4,8 @@
  * referred Async Walker By bfricka
  * 2014-5-22
  * Gong
+ *
+ *
  */
 var _ = require('lodash');
 var q = require('q');
@@ -24,6 +26,13 @@ var pathsep='.';
 /**
  * Main module function. Performs all async walking
  * @param  {string} model               - model to walk
+ *          schema like this:
+ *              Schema({
+                    name: String,
+                    children: [
+                        { seq: Number, child: {type: Schema.ObjectId, ref: 'self'}, qty: Number}
+        ]
+    })
  * @param  {string} base               - {field,value,serial,quantity}
  * @param  {object|function} [config] - Optional config object or callback
  * @param  {boolean} [assemblyMode]  - Optional param to indicate directory instead of file mode
@@ -31,6 +40,8 @@ var pathsep='.';
  */
 function bomSpreader(model,base, config, assemblyMode) {
     var defaults = _.clone(defaultConfig);
+    var getInventory= q.nbind(model.findOne,model);
+    var popChildren= q.nbind(model.populate,model);
 
     if (config) {
         if (_.isFunction(config)) {
@@ -107,21 +118,24 @@ function bomSpreader(model,base, config, assemblyMode) {
      * Async readDoc that makes sure iterations doesn't get out of hand
      * maps directory contents to the qualified base, and returns
      * a promise intead of using callback style
-     * @param  {string} fieldValue - Qualified value to search
-     * @return {object}     - fs.readDoc wrapped in a promise
+     * @param  {object} base - Qualified value to search
+     * @return {object}     - readDoc wrapped in a promise
      */
     function readDoc(base) {
-        return q
-            .nfapply(fs.readdir, [dir])
-            .then(function(list) {
-                return mapPaths(dir, list);
-            });
+        var condition={};
+        condition[base.field]=base.value;
+        return getInventory(condition)
+            .then(function(inv) {
+                popChildren(inv, {path: 'children.child', select: 'name'}).then(function (inv) {
+                    return mapPaths(base, inv);
+                });
+            })
     }
 
     /**
      * Gets the fs.stat object from each item in the list and
      * sends back an object w/ the relevant values set
-     * @param  {Array.<string>} list - List of paths to get fs.stat info for
+     * @param  {Array.<object>} list - List of paths to get fs.stat info for
      * @return {object}     - Promise that resolves to the array of normalized
      * objects when all fs.stat promises resolve
      */
