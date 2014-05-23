@@ -9,19 +9,18 @@
  */
 var _ = require('lodash');
 var q = require('q');
-var fs = require('fs');
-var path = require('path');
 var chalk = require('chalk');
 
 var defaultConfig = {
-
+    searchField:'_id',
+    quantityField:'quantity',
+    searialField:'serial',
     callback: null,
     maxDepth: 1000,
-    maxIterations: 500,
-    assemblyMode: false
+    maxIterations: 1000
 };
 
-var pathsep='.';
+var pathsep = '.';
 
 /**
  * Main module function. Performs all async walking
@@ -30,31 +29,25 @@ var pathsep='.';
  *              Schema({
                     name: String,
                     children: [
-                        { seq: Number, child: {type: Schema.ObjectId, ref: 'self'}, qty: Number}
+                        { seq: Number, child: {type: Schema.ObjectId, ref: self}, qty: Number}
         ]
     })
- * @param  {string} base               - {field,value,serial,quantity}
+ * @param  {object} base               - {inv:fieldValue,serial:'1',qty:1-n}
  * @param  {object|function} [config] - Optional config object or callback
- * @param  {boolean} [assemblyMode]  - Optional param to indicate directory instead of file mode
  * @return {object}                   - Q.promise that resolves to results array.
  */
-function bomSpreader(model,base, config, assemblyMode) {
+function bomSpreader(base, config) {
     var defaults = _.clone(defaultConfig);
-    var getInventory= q.nbind(model.findOne,model);
-    var popChildren= q.nbind(model.populate,model);
 
-    if (config) {
-        if (_.isFunction(config)) {
-            defaults.callback = config;
-            config = defaults;
-
-            if (arguments.length > 2) config.assemblyMode = assemblyMode;
-        } else {
+    if (!config||!config.model) {
+        console.warn(chalk.yellow("Reached max depth (%d) in: " + path + ':' + base.name), config.maxDepth);
+        //throw new Error('model is required in config')
+    } else {
             config = _.defaults(config, defaults);
         }
-    } else {
-        config = defaults;
-    }
+    var model=config.model;
+    var getInventory = q.nbind(model.findOne, model);
+    var popChildren = q.nbind(model.populate, model);
 
     var originalDepth = 0;
     var hasMaxDepth = _.isFinite(config.maxDepth);
@@ -77,18 +70,18 @@ function bomSpreader(model,base, config, assemblyMode) {
 
     /**
      * Main asyncEntry
-     * @param  {string} fieldValue - Qualified value to search
-     * @return {object}     - Promise
+     * @param  {object} base               - {value,serial,qty}
+     *  @return {object}     - Promise
      */
     function walkAsync(base) {
         var skip = false;
         var deferred = q.defer();
 
-        path=base.serial||'';
+        var path = base.serial || '';
         if (hasRecursionLimits) {
             var currentDepth = getDepthFromBase(path);
             if (hasMaxDepth && currentDepth >= config.maxDepth) {
-                console.warn(chalk.yellow("Reached max depth (%d) in: " + path+':'+base.name), config.maxDepth);
+                console.warn(chalk.yellow("Reached max depth (%d) in: " + path + ':' + base.name), config.maxDepth);
                 skip = true;
             }
 
@@ -102,11 +95,11 @@ function bomSpreader(model,base, config, assemblyMode) {
             deferred.resolve(void 0);
         } else {
             readDoc(base)
-                .then(statItems)
-                .then(getFiles)
-                .then(function(a) {
+                .then(populate)
+                .then(getChildren)
+                .then(function (a) {
                     deferred.resolve(a);
-                }, function(b) {
+                }, function (b) {
                     deferred.reject("Error " + b);
                 });
         }
@@ -122,83 +115,45 @@ function bomSpreader(model,base, config, assemblyMode) {
      * @return {object}     - readDoc wrapped in a promise
      */
     function readDoc(base) {
-        var condition={};
-        condition[base.field]=base.value;
+        var condition = {};
+        condition[config.searchField] = base.inv;
         return getInventory(condition)
-            .then(function(inv) {
-                popChildren(inv, {path: 'children.child', select: 'name'}).then(function (inv) {
-                    return mapPaths(base, inv);
-                });
+            .then(function (inv) {
+                base['inv'] = inv;
+                return base
             })
     }
 
-    /**
-     * Gets the fs.stat object from each item in the list and
-     * sends back an object w/ the relevant values set
-     * @param  {Array.<object>} list - List of paths to get fs.stat info for
-     * @return {object}     - Promise that resolves to the array of normalized
-     * objects when all fs.stat promises resolve
-     */
-    function statItems(list) {
-        var statPromises = [];
-
-        _.forEach(list, function(item) {
-            var qStatPromise = q.nfapply(fs.stat, [item]).then(function(stat) {
-                var itemStat = {
-                    path: item,
-                    isFile: stat.isFile(),
-                    isDirectory: stat.isDirectory()
-                };
-
-                if (config.callback) {
-                    itemStat = config.callback(itemStat);
-                    // For filter
-                    if (!itemStat) return;
-                }
-
-                return itemStat;
-            }, function(err) {
-                if (err) console.warn(chalk.yellow(err.message));
-            });
-
-            statPromises.push(qStatPromise);
+    function populate(base) {
+        popChildren(base.inv, {path: 'children.child', select: config.field}).then(function (inv) {
+            if (inv.children.length > 0)
+                return mapChildren(base, inv.children);
+            else
+                return []
         });
-
-        return q.all(statPromises);
     }
 
+
     /**
-     * Takes in a stat list and collects the files, while creating new
+     * Takes in a stat list and collects the BOM, while creating new
      * promises on any directories. When all promises resolve down the chain
-     * this eventually has the list of all files.
+     * this eventually has the list of all BOM.
      * @param  {array} list - List of stat objects
      * @return {object}     - q.all promise that resolves w/ the full
-     * list of files when all promises have been resolved
+     * list of BOM when all promises have been resolved
      */
-    function getFiles(list) {
-        var files = [];
+    function getChildren(list) {
+        var BOM = [];
         var promises = [];
 
-        _.forEach(list, function(item) {
+        _.forEach(list, function (item) {
             if (!item) return;
-
-            if (config.assemblyMode) {
-                if (item.isDirectory) {
-                    files.push(item.path);
-                    promises.push(walkAsync(item.path));
-                }
-                return;
-            }
-
-            if (item.isDirectory) {
-                promises.push(walkAsync(item.path));
-            } else if (item.isFile) {
-                files.push(item.path);
-            }
+            BOM.push(item);
+                promises.push(walkAsync(item));
         });
 
-        return q.all(promises).then(function(list) {
-            return _.flatten(files.concat(_.compact(list)));
+        return q.all(promises).then(function (list) {
+            return _.flatten(BOM.concat(_.compact(list)));
         });
     }
 
@@ -208,39 +163,41 @@ function bomSpreader(model,base, config, assemblyMode) {
      * @param  {array} list - List of items to use
      * @return {array}      - Mapped list of items
      */
-    function mapPaths(base, list) {
-        return _.map(list, function(item) {
-            var paths = Array.prototype.filter.call(arguments, f);
-            var joined = paths.join('\\');
-            return path.join(base, item);
+    function mapChildren(base, list) {
+        return _.map(list, function (item) {
+            return {
+                inv:item[config.searchField],
+                serial:base.serila+pathsep+item[config.serialField],
+                quantity:base.quantity*item[config.quantityField]
+            }
         });
     }
 
     return walkAsync(base);
 }
 
-(function(aw) {
+(function (aw) {
     function _createFilterFn(callback, matchDirectories) {
-        return function(itemStat) {
+        return function (itemStat) {
             var toAdd = (itemStat.isDirectory && !matchDirectories) ? true : !!callback(itemStat.path);
             return toAdd ? itemStat : void 0;
         };
     }
 
     function _createMapFn(callback) {
-        return function(itemStat) {
+        return function (itemStat) {
             if (itemStat.isDirectory) return itemStat;
             itemStat.path = callback(itemStat.path);
             return itemStat;
         };
     }
 
-    aw.filter = function(dir, callback, matchDirectories) {
+    aw.filter = function (dir, callback, matchDirectories) {
         var filterFn = _createFilterFn(callback, matchDirectories);
         return aw(dir, filterFn);
     };
 
-    aw.map = function(dir, callback) {
+    aw.map = function (dir, callback) {
         var mapFn = _createMapFn(callback);
         return aw(dir, mapFn);
     };
