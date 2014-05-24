@@ -12,9 +12,9 @@ var q = require('q');
 var chalk = require('chalk');
 
 var defaultConfig = {
-    searchField:'_id',
-    quantityField:'quantity',
-    searialField:'serial',
+    searchField: '_id',
+    quantityField: 'quantity',
+    searialField: 'serial',
     callback: null,
     maxDepth: 1000,
     maxIterations: 1000
@@ -24,7 +24,7 @@ var pathsep = '.';
 
 /**
  * Main module function. Performs all async walking
- * @param  {string} model               - model to walk
+ * @param  {object} model               - model to walk
  *          schema like this:
  *              Schema({
                     name: String,
@@ -38,14 +38,15 @@ var pathsep = '.';
  */
 function bomSpreader(base, config) {
     var defaults = _.clone(defaultConfig);
-
-    if (!config||!config.model) {
-        console.warn(chalk.yellow("Reached max depth (%d) in: " + path + ':' + base.name), config.maxDepth);
+    console.log(base);
+    console.log(config);
+    if (!config || !config.model) {
+        console.warn("Reached max depth (%d) in: " + path + ':' + base.name, config.maxDepth);
         //throw new Error('model is required in config')
     } else {
-            config = _.defaults(config, defaults);
-        }
-    var model=config.model;
+        config = _.defaults(config, defaults);
+    }
+    var model = config.model;
     var getInventory = q.nbind(model.findOne, model);
     var popChildren = q.nbind(model.populate, model);
 
@@ -73,10 +74,10 @@ function bomSpreader(base, config) {
      * @param  {object} base               - {value,serial,qty}
      *  @return {object}     - Promise
      */
-    function walkAsync(base) {
+    function spreadBom(base) {
         var skip = false;
         var deferred = q.defer();
-
+        console.log('in');
         var path = base.serial || '';
         if (hasRecursionLimits) {
             var currentDepth = getDepthFromBase(path);
@@ -120,6 +121,7 @@ function bomSpreader(base, config) {
         return getInventory(condition)
             .then(function (inv) {
                 base['inv'] = inv;
+                console.log(base);
                 return base
             })
     }
@@ -148,8 +150,9 @@ function bomSpreader(base, config) {
 
         _.forEach(list, function (item) {
             if (!item) return;
+            console.log(item);
             BOM.push(item);
-                promises.push(walkAsync(item));
+            promises.push(spreadBom(item));
         });
 
         return q.all(promises).then(function (list) {
@@ -166,41 +169,13 @@ function bomSpreader(base, config) {
     function mapChildren(base, list) {
         return _.map(list, function (item) {
             return {
-                inv:item[config.searchField],
-                serial:base.serila+pathsep+item[config.serialField],
-                quantity:base.quantity*item[config.quantityField]
+                inv: item[config.searchField],
+                serial: base.serila + pathsep + item[config.serialField],
+                quantity: base.quantity * item[config.quantityField]
             }
         });
     }
 
-    return walkAsync(base);
+    return spreadBom(base);
 }
-
-(function (aw) {
-    function _createFilterFn(callback, matchDirectories) {
-        return function (itemStat) {
-            var toAdd = (itemStat.isDirectory && !matchDirectories) ? true : !!callback(itemStat.path);
-            return toAdd ? itemStat : void 0;
-        };
-    }
-
-    function _createMapFn(callback) {
-        return function (itemStat) {
-            if (itemStat.isDirectory) return itemStat;
-            itemStat.path = callback(itemStat.path);
-            return itemStat;
-        };
-    }
-
-    aw.filter = function (dir, callback, matchDirectories) {
-        var filterFn = _createFilterFn(callback, matchDirectories);
-        return aw(dir, filterFn);
-    };
-
-    aw.map = function (dir, callback) {
-        var mapFn = _createMapFn(callback);
-        return aw(dir, mapFn);
-    };
-}(bomSpreader));
-
 module.exports = bomSpreader;
