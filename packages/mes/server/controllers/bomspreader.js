@@ -14,8 +14,8 @@ var q = require('q');
 var defaultConfig = {
     searchField: '_id',
     quantityField: 'quantity',
-    searialField: 'serial',
-    popFields:'',
+    serialField: 'serial',
+    popFields: '',
     callback: null,
     maxDepth: 1000,
     maxIterations: 1000
@@ -49,10 +49,11 @@ exports.bomSpreader = function (base, config) {
     } else {
         config = _.defaults(config, defaults);
     }
-    if (config.popFields.indexOf(config.searchField)<=0){
-        config.popFields=config.popFields+' '+config.searchField;
+    if (config.popFields.indexOf(config.searchField) <= 0) {
+        config.popFields = config.popFields + ' ' + config.searchField;
+        config.popFields = config.popFields.replace(/(^\s*)/g, "")
     }
-    console.log( config.popFields);
+    console.log(config.popFields);
     var model = config.model;
     var getInventory = q.nbind(model.findOne, model);
     var popChildren = q.nbind(model.populate, model);
@@ -124,7 +125,12 @@ exports.bomSpreader = function (base, config) {
         condition[config.searchField] = base.invCode;
         return getInventory(condition)
             .then(function (inv) {
-                var options = {path: 'children.child', select: config.popFields};
+                var pops = config.popFields;
+                if (pops.indexOf(config.searchField) <= 0) {
+                    pops = config.popFields + ' ' + config.searchField;
+                    pops = pops.replace(/(^\s*)/g, "")
+                }
+                var options = {path: 'children.child', select: pops};
                 return popChildren(inv, options).then(function (inv) {
                     return mapChildren(base, inv.children);
                 })
@@ -162,11 +168,18 @@ exports.bomSpreader = function (base, config) {
      */
     function mapChildren(base, list) {
         return _.map(list, function (item) {
-            return {
+            var bomItem = {
                 invCode: item.child[config.searchField],
                 serial: base.serial + pathsep + item[config.serialField],
                 quantity: base.quantity * item[config.quantityField]
-            }
+            };
+            var pops = config.popFields.split(' ');
+            _.forEach(pops, function (pop) {
+              if(pop!=config.searchField){
+                  bomItem[pop]=item.child[pop];
+              }
+            });
+            return bomItem;
         });
     }
 

@@ -90,7 +90,7 @@ var bomSpreader=require('./bomspreader.js').bomSpreader;
     });
     var User = db2.model('User', user);
     //console.log(bomSpreader);
-    bomSpreader({invCode:'p0',quantity:2},{model:User,searchField:'name',serialField:'seq',quantityField:'qty'}).then(function(bom){
+    bomSpreader({invCode:'p0',quantity:2},{model:User,searchField:'name',serialField:'seq',quantityField:'qty',popFields:'_id __v'}).then(function(bom){
         res.jsonp(bom);
     });
 
