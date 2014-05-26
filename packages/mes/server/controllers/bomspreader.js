@@ -15,6 +15,7 @@ var defaultConfig = {
     searchField: '_id',
     quantityField: 'quantity',
     searialField: 'serial',
+    popFields:'',
     callback: null,
     maxDepth: 1000,
     maxIterations: 1000
@@ -48,6 +49,10 @@ exports.bomSpreader = function (base, config) {
     } else {
         config = _.defaults(config, defaults);
     }
+    if (config.popFields.indexOf(config.searchField)<=0){
+        config.popFields=config.popFields+' '+config.searchField;
+    }
+    console.log( config.popFields);
     var model = config.model;
     var getInventory = q.nbind(model.findOne, model);
     var popChildren = q.nbind(model.populate, model);
@@ -119,7 +124,7 @@ exports.bomSpreader = function (base, config) {
         condition[config.searchField] = base.invCode;
         return getInventory(condition)
             .then(function (inv) {
-                var options = {path: 'children.child', select: config.searchField};
+                var options = {path: 'children.child', select: config.popFields};
                 return popChildren(inv, options).then(function (inv) {
                     return mapChildren(base, inv.children);
                 })
