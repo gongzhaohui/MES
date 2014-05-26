@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var express = require('express'),
-    favicon = require('static-favicon'),
+    favicon = require('serve-favicon'),
     morgan = require('morgan'),
     compression = require('compression'),
     bodyParser = require('body-parser'),
@@ -27,7 +27,7 @@ var express = require('express'),
 
 module.exports = function(app, passport, db) {
 
-    var gfs = new Grid(db.connections[0].db, db.mongo);
+    var gfs = new Grid(db.connection.db, db.mongo);
 
     app.set('showStackError', true);
 
@@ -69,7 +69,6 @@ module.exports = function(app, passport, db) {
     app.use(expressValidator());
     app.use(bodyParser());
     app.use(methodOverride());
-    app.use(cookieParser());
 
     // Import your asset file
     var assets = require('./assets.json');
@@ -109,7 +108,7 @@ module.exports = function(app, passport, db) {
     app.use(flash());
 
     // Setting the fav icon and static folder
-    app.use(favicon());
+    app.use(favicon(appPath + '/public/system/assets/img/favicon.ico'));
 
     app.get('/modules/aggregated.js', function(req, res) {
         res.setHeader('content-type', 'text/javascript');
@@ -125,7 +124,7 @@ module.exports = function(app, passport, db) {
         }, function(err, file) {
 
             if (!file) {
-                fs.createReadStream(process.cwd() + '/public/system/lib/bootstrap/dist/css/bootstrap.css').pipe(res);
+                fs.createReadStream(appPath + '/public/system/lib/bootstrap/dist/css/bootstrap.css').pipe(res);
             } else {
                 // streaming to gridfs
                 var readstream = gfs.createReadStream({

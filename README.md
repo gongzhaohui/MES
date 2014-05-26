@@ -19,6 +19,9 @@ $ npm install -g bower
 
 ### Optional [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 * Grunt - Download and Install [Grunt](http://gruntjs.com).
+```
+$ npm install -g grunt-cli
+```
 
 ## Additional Packages
 * Express - Defined as npm module in the [package.json](package.json) file.
@@ -91,7 +94,7 @@ $ npm cache clean
 $ bower cache clean
 ```
 
- 
+
 ## Configuration
 All configuration is specified in the [server/config](server/config/) folder, particularly the [config.js](server/config/config.js) file and the [env](server/config/env/) files. Here you will need to specify your application name, database name, and hook up any social app keys if you want integration with Twitter, Facebook, GitHub, or Google.
 
@@ -118,19 +121,33 @@ If you are using node instead of grunt, it is very similar:
 
 > NOTE: Running Node.js applications in the __production__ environment enables caching, which is disabled by default in all other environments.
 
+## Maintaining your own repository
+After initializing a project, you'll see that the root directory of your project is already a git repository. MEAN uses git to download and update its own code. To handle its own operations, MEAN creates a remote called `upstream`. This way you can use git as you would in any other project.
+
+To maintain your own public or private repository, add your repository as remote. See here for information on [adding an existing project to GitHub](https://help.github.com/articles/adding-an-existing-project-to-github-using-the-command-line).
+
+```
+git remote add origin <remote respository URL>
+git push -u origin master
+```
+
+
 ## Getting Started
 We pre-included an article example. Check out:
-  
-  * [The Model](server/models/article.js) - Where we define our object schema.
-  * [The Controller](server/controllers/articles.js) - Where we take care of our backend logic.
-  * [NodeJS Routes](server/routes) - Where we define our REST service routes.
-  * [AngularJs Routes](public/articles/routes/articles.js) - Where we define our CRUD routes.
-  * [The AngularJs Service](public/articles/services/articles.js) - Where we connect to our REST service.
-  * [The AngularJs Controller](public/articles/controllers/articles.js) - Where we take care of  our frontend logic.
-  * [The AngularJs Views Folder](public/articles/views) - Where we keep our CRUD views.
+
+  * [The Model](packages/articles/server/models/article.js) - Where we define our object schema.
+  * [The Controller](packages/articles/server/controllers/articles.js) - Where we take care of our backend logic.
+  * [NodeJS Routes](packages/articles/server/routes/articles.js) - Where we define our REST service routes.
+  * [AngularJs Routes](packages/articles/public/routes/articles.js) - Where we define our CRUD routes.
+  * [The AngularJs Service](packages/articles/public/services/articles.js) - Where we connect to our REST service.
+  * [The AngularJs Controller](packages/articles/public/controllers/articles.js) - Where we take care of  our frontend logic.
+  * [The AngularJs Views Folder](packages/articles/public/views) - Where we keep our CRUD views.
 
 ## Heroku Quick Deployment
-Before you start make sure you have the <a href="https://toolbelt.heroku.com/">Heroku toolbelt</a> installed and an accessible MongoDB instance - you can try <a href="http://www.mongohq.com/">MongoHQ</a> which has an easy setup).
+Before you start make sure you have the [Heroku toolbelt](<https://toolbelt.heroku.com/")
+installed and an accessible MongoDB instance - you can try [MongoHQ](http://www.mongohq.com/)
+which has an easy setup).
+
 Add the db string to the production env in server/config/env/production.js.
 
 ```
