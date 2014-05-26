@@ -75,7 +75,7 @@ exports.testRecursive = function (req, res) {
  */
 
 exports.testPromise = function (req, res) {
-var bomSpreader=require('./nestedwalker').bomSpreader;
+var bomSpreader=require('./bomspreader.js').bomSpreader;
     var mongoose = require('mongoose');
     var Schema = mongoose.Schema;
     var dbname = 'testing_populateAdInfinitum';
@@ -89,8 +89,11 @@ var bomSpreader=require('./nestedwalker').bomSpreader;
         ]
     });
     var User = db2.model('User', user);
+    //console.log(bomSpreader);
+    bomSpreader({invCode:'p0',quantity:2},{model:User,searchField:'name',serialField:'seq',quantityField:'qty'}).then(function(bom){
+        res.jsonp(bom);
+    });
 
-    res.jsonp(bomSpreader({inv:'p0',quantity:2},{madel:User,searchField:'name',serialField:'seq',quantityField:'qty'}))
 };
 
 
