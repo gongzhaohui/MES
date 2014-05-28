@@ -72,7 +72,7 @@ MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉
 员工基础档案。记录员工基本信息。  
 
  * 指定员工角色（role）。
- * id格式：**雇佣年月（YYYYMM）+流水（00）**
+ * id格式：** 雇佣年月（YYYYMM）+流水（00）**
 
 ## 员工 [/employee{?depart}]
 where fired null
@@ -487,16 +487,41 @@ where fired null
 
 # Group queries
 ## SO [/queries/so/]
-### all [/queries/so/all?start&end]
+
+### SO all [/queries/so/all?start&end]
 + Parameters
-    + start (optional, Date, `2014-01-01`) ... 起始日期
-    + end (optional, Date, `2014-04-28`) ... 截止日期
-#### [GET]
+    + start=`this month 1st` (optional, Date, `2014-01-01`  this month 1st) ... 起始日期
+    + end =`now` (optional, Date, `2014-04-28`) ... 截止日期
+    
+#### list [GET]
+
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
 
 ### residual [/queries/so/residual?start&end]
-#### deliverable
-#### delayed
-### finished
++ Parameters
+    + start=`this month 1st` (optional, Date, `2014-01-01`  this month 1st) ... 起始日期
+    + end =`now` (optional, Date, `2014-04-28`) ... 截止日期
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+### deliverable  [/queries/so/deliverable?start&end]
+
+### delayed [/queries/so/delayed?start&end]
+
+### finished [/queries/so/finished?start&end]
+
 ## PO
 ### all
 ### residual
