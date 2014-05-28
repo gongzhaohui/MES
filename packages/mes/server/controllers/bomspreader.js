@@ -79,17 +79,18 @@ exports.bomSpreader = function (base, config) {
 
     /**
      * Main asyncEntry
-     * @param  {object} base               - {value,serial,qty}
+     * @param  {object} base               - {invCode,serial,qty,popFields}
      *  @return {object}     - Promise
      */
     function spreadBom(base) {
         var skip = false;
         var deferred = q.defer();
-        var path = base.serial = base.serial || '';
+        var path = base.path= base.path||base.invCode ;
+        base.serial=base.serial||'';
         if (hasRecursionLimits) {
             var currentDepth = getDepthFromBase(path);
             if (hasMaxDepth && currentDepth >= config.maxDepth) {
-                console.warn("Reached max depth (%d) in: " + path + ':' + base.name, config.maxDepth);
+                console.warn("Reached max depth (%d) in: " + path + ':' + base.invCode, config.maxDepth);
                 skip = true;
             }
 
@@ -114,9 +115,6 @@ exports.bomSpreader = function (base, config) {
     }
 
     /**
-     * Async readDoc that makes sure iterations doesn't get out of hand
-     * maps directory contents to the qualified base, and returns
-     * a promise intead of using callback style
      * @param  {object} base - Qualified value to search
      * @return {object}     - readDoc wrapped in a promise
      */
@@ -125,11 +123,6 @@ exports.bomSpreader = function (base, config) {
         condition[config.searchField] = base.invCode;
         return getInventory(condition)
             .then(function (inv) {
-                /*var pops = config.popFields;
-                if (pops.indexOf(config.searchField) <= 0) {
-                    pops = config.popFields + ' ' + config.searchField;
-                    pops = pops.replace(/(^\s*)/g, "")
-                }*/
                 var options = {path: 'children.child', select: config.popFields};
                 return popChildren(inv, options).then(function (inv) {
                     return mapChildren(base, inv.children);
@@ -139,10 +132,7 @@ exports.bomSpreader = function (base, config) {
 
 
     /**
-     * Takes in a stat list and collects the BOM, while creating new
-     * promises on any directories. When all promises resolve down the chain
-     * this eventually has the list of all BOM.
-     * @param  {array} list - List of stat objects
+     * @param  {array} list - List of base objects
      * @return {object}     - q.all promise that resolves w/ the full
      * list of BOM when all promises have been resolved
      */
@@ -161,18 +151,23 @@ exports.bomSpreader = function (base, config) {
     }
 
     /**
-     * Simply takes a list of items and joins the provided base to each item.
+     *
      * @param  {Object} base - The base path to use
      * @param  {array} list - List of items to use
      * @return {array}      - Mapped list of items
+     *
+     * todo serial
      */
     function mapChildren(base, list) {
         return _.map(list, function (item) {
-            var serial=(base.serial + pathsep + item[config.serialField]).replace(/(^\.)/g, "")
+            var serial=base.serial + pathsep + item[config.serialField];
+            //will be refactored from the hard coded '.'.
+            serial=serial.replace(/(^\.)/g, "");
             var bomItem = {
                 invCode: item.child[config.searchField],
                 serial: serial,
-                quantity: base.quantity * item[config.quantityField]
+                quantity: base.quantity * item[config.quantityField],
+                path:base.path+pathsep+item.child[config.searchField]
             };
             var pops = config.popFields.split(' ');
             _.forEach(pops, function (pop) {
