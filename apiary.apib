@@ -5,6 +5,7 @@ MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉
 
    简单功能列表：  
  
+ * 用户角色管理
  * 销售订单
  * 采购订单
  * 存货管理
@@ -72,7 +73,7 @@ MES API 的目标是一个*生产管理系统*，包含_简单_*排程*但不涉
 员工基础档案。记录员工基本信息。  
 
  * 指定员工角色（role）。
- * id格式：**雇佣年月（YYYYMM）+流水（00）**
+ * id格式：** 雇佣年月（YYYYMM）+流水（00）**
 
 ## 员工 [/employee{?depart}]
 where fired null
@@ -486,38 +487,281 @@ where fired null
  * 删
 
 # Group queries
-## SO [/queries/so/]
-### all [/queries/so/all?start&end]
-+ Parameters
-    + start (optional, Date, `2014-01-01`) ... 起始日期
-    + end (optional, Date, `2014-04-28`) ... 截止日期
-#### [GET]
 
-### residual [/queries/so/residual?start&end]
-#### deliverable
-#### delayed
-### finished
-## PO
-### all
-### residual
-#### delayed
-### finished
-## MO
-### all
-### residual
-#### delayed
-### finished
-## Inbound
-### all
-## Outnound
-### all
-## Payable
-### all
-## Paid
-### all
-## Receivable
-### all
-## Received
-### all
+## Group SO
+
+### all [/queries/so/all?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+#### list [GET]
+
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+### residual [/queries/so/residual?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+### deliverable  [/queries/so/deliverable?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+### delayed [/queries/so/delayed?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+### finished [/queries/so/finished?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+## Group PO 
+### all [/queries/po/all?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+### residual [/queries/po/residual?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+### delayed  [/queries/po/delayed?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+### finished [/queries/po/finished?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+## Group MO 
+### all  [/queries/mo/all?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+### residual  [/queries/mo/residual?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+### delayed [/queries/mo/delayed?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+### finished  [/queries/mo/finished?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+## Group Inbound
+### all  [/queries/inbound/all?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+## Group Outnound
+### all [/queries/outbound/all?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+## Group Payable
+### all [/queries/payable/all?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+## Group Paid
+### all [/queries/paid/all?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+## Group Receivable
+### all [/queries/receivable/all?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
+## Group Received
+### all [/queries/received/all?conditions]
++ Parameters
+    + conditions (required , object, `{start:,end:...}`) ... conditions
+
+    
+#### list [GET]
+  
+ + response 200 (application/json)
+ 
+        {
+            "content": "SOs"
+        }
+
+
 
 
