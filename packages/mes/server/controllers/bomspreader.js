@@ -156,13 +156,11 @@ exports.bomSpreader = function (base, config) {
      * @param  {array} list - List of items to use
      * @return {array}      - Mapped list of items
      *
-     * todo serial
+     * refactored serial  2014-05-29
      */
     function mapChildren(base, list) {
         return _.map(list, function (item) {
-            var serial=base.serial + pathsep + item[config.serialField];
-            //will be refactored from the hard coded '.'.
-            serial=serial.replace(/(^\.)/g, "");
+            var serial=base.serial===''?item[config.serialField]:base.serial + pathsep + item[config.serialField];
             var bomItem = {
                 invCode: item.child[config.searchField],
                 serial: serial,
