@@ -43,9 +43,15 @@ exports.bomSpreader = function (base, config) {
     var defaults = _.clone(defaultConfig);
     //console.log(base);
     //console.log(config);
+    if (!base || !base.invCode) {
+       console.log(base);
+        throw new Error('base object is required')
+    }
+    base.quantity= base.quantity||1;
+    base.quantity=base.quantity>0?base.quantity:1;
     if (!config || !config.model) {
-        console.warn("model must be configured.");
-        //throw new Error('model is required in config')
+        //console.warn("model must be configured.");
+        throw new Error('model is required in config')
     } else {
         config = _.defaults(config, defaults);
     }
