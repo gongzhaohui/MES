@@ -1,27 +1,31 @@
 <!doctype html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="https://www.facebook.com/2008/fbml" itemscope="itemscope" itemtype="http://schema.org/Product">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="https://www.facebook.com/2008/fbml" itemscope="itemscope"
+      itemtype="http://schema.org/Product">
 {% include '../includes/head.html' %}
 
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top" data-ng-include="'/public/system/views/header.html'" data-role="navigation"></div>
-    {% if adminEnabled %}
-    <section class="admin-menu">
-        <div data-ng-include="'/mean-admin/views/index.html'"></div>
-    </section>
-    {% endif %}
+<div class="navbar navbar-inverse navbar-fixed-top" data-ng-include="'/public/system/views/header.html'"
+     data-role="navigation"></div>
+{% if adminEnabled %}
+<section class="admin-menu">
+    <div data-ng-include="'/mean-admin/views/index.html'"></div>
+</section>
+{% endif %}
+<div class="container" style="padding: 0 15px">
     <div class="row">
-    <section class="content col-md-3">
-     <div class="panel">
-             <div  data-ng-include="'/public/system/views/left.html'" data-role="menu"></div>
-     </div>
-    </section>
-    <section class="content col-md-9">
-        <section class="panel">
-            {% block content %}{% endblock %}
+        <section class="content col-md-3">
+            <div class="panel">
+                <div data-ng-include="'/public/system/views/left.html'" data-role="menu"></div>
+            </div>
         </section>
-    </section>
+        <section class="content col-md-9">
+            <section class="panel">
+                {% block content %}{% endblock %}
+            </section>
+        </section>
     </div>
-    {% include '../includes/foot.html' %}
+</div>
+{% include '../includes/foot.html' %}
 </body>
 
 </html>
