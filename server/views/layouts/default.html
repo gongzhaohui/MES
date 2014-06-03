@@ -9,11 +9,18 @@
         <div data-ng-include="'/mean-admin/views/index.html'"></div>
     </section>
     {% endif %}
-    <section class="content">
-        <section class="container">
+    <div class="row">
+    <section class="content col-md-3">
+     <div class="panel">
+             <div  data-ng-include="'/public/system/views/left.html'" data-role="menu"></div>
+     </div>
+    </section>
+    <section class="content col-md-9">
+        <section class="panel">
             {% block content %}{% endblock %}
         </section>
     </section>
+    </div>
     {% include '../includes/foot.html' %}
 </body>
 

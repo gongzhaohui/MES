@@ -1,0 +1,27 @@
+<div  data-ng-controller="HeaderController">
+
+<br>
+    <br>
+
+    <br>
+    <br><br>
+    <br>
+  <div >
+    <ul >
+      <li data-ng-repeat="item in menus.main" ui-route="/{{item.link}}" ng-class="{active: $uiRoute}">
+          <a mean-token="item.link" ui-sref='{{item.link}}'>{{item.title}}</a>
+      </li>
+    </ul>
+  </div>
+    <div >
+        <ul>
+            <li>a</li>
+            <li>b</li>
+            <li>c</li>
+            <li>sdddddddddddddd</li>
+        </ul>
+    </div>
+    <p class="alert alert-info">You can find your package in /packages/mes</p>
+    <br>
+
+</div>
