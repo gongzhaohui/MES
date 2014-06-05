@@ -26,7 +26,6 @@ exports.depart = function (req, res, next, id) {
  */
 exports.create = function (req, res) {
     var depart = new Depart(req.body);
-    depart.user = req.user;
 
     depart.save(function (err) {
         if (err) {
@@ -90,7 +89,7 @@ exports.show = function (req, res) {
  * List of Departs
  */
 exports.all = function (req, res) {
-    Depart.find().sort('-created').exec(function (err, departs) {
+    Depart.find().sort('path').exec(function (err, departs) {
         if (err) {
             res.render('error', {
                 status: 500
