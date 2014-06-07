@@ -2,8 +2,10 @@
 
 /**
  * Created by gong on 14-3-31.
- * 将so与po放在一个表中，抹除customer与supplier的区别（partner）。订单的存储在一起，通过各自的controller分别处理
- * mo虽然名为order，与so和po差异很大，单独处理
+ * 把往来作为一个属性的角度看，可以将so与po放在一个表中，从别人买东西与别人从自己买东西的区别只是主体不同。订单的存储在一起，通过各自的controller分别处理
+ * 好处是抹除customer与supplier的区别（partner）。概念上似乎单纯，所有订单的模型一致，供应商和客户平等。
+ * 不好的地方：因果关系，po有时源于so，会不会增加复杂度？其他未知的复杂度？
+ * mo虽然名为order，与so和po概念不同，单独处理
  * todo
  * ｛更新履历函数
  * 更新价格历史｝ to be move to controller

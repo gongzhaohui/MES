@@ -2,6 +2,9 @@
 
 /**
  * Created by gong on 14-4-1.
+ * 是否向mean的方式靠拢，以类似用户分类的形式移动到system中，而不是现在的package中？
+ * 移动同时涉及role
+ * package管理自己的menu及所属role
  * 更新履历
  */
 var mongoose = require('mongoose'),
