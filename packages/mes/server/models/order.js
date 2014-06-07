@@ -16,6 +16,8 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 var OrderItemSchema = new Schema({
     row: {type: Number, index: true, unique: true},
+    //source.sid.row
+    source: String,
     iId: {type: String, ref: 'Inventory', index: true},
     qty: {
         ordered: {type:Number,min:1},
