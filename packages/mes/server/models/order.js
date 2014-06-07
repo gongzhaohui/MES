@@ -2,9 +2,11 @@
 
 /**
  * Created by gong on 14-3-31.
+ * 将so与po放在一个表中，抹除customer与supplier的区别（partner）。订单的存储在一起，通过各自的controller分别处理
+ * mo虽然名为order，与so和po差异很大，单独处理
  * todo
- * 更新履历函数
- * 更新价格历史
+ * ｛更新履历函数
+ * 更新价格历史｝ to be move to controller
  * 订单类型
  *
  */
@@ -52,6 +54,8 @@ var OrderSchema = new Schema({
     ]
 });
 OrderSchema.index({_id: 1, 'items.row': 1});
+OrderSchema.index({orderType: 1});
+OrderSchema.index({ voucherType:1});
 OrderSchema.index({orderType: 1, voucherType:1});
 /*
 populate employee,inventory,customer*/
