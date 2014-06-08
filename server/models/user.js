@@ -14,7 +14,9 @@ var validatePresenceOf = function(value) {
     // If you are authenticating by any of the oauth strategies, don't validate.
     return (this.provider && this.provider !== 'local') || value.length;
 };
-
+var RoleSchema = new Schema({
+    role: {type:String,ref:'Role'}
+});
 /**
  * User Schema
  */
@@ -35,10 +37,7 @@ var UserSchema = new Schema({
         unique: true,
         validate: [validatePresenceOf, 'Username cannot be blank']
     },
-    roles: {
-        type: Array,
-        default: ['authenticated']
-    },
+    roles:[RoleSchema],
     hashed_password: {
         type: String,
         validate: [validatePresenceOf, 'Password cannot be blank']
@@ -48,6 +47,7 @@ var UserSchema = new Schema({
         default: 'local'
     },
     salt: String,
+    depart:{type:String,ref:'depart'},
     facebook: {},
     twitter: {},
     github: {},
