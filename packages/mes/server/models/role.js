@@ -8,12 +8,10 @@ var mongoose = require('mongoose'),
 /**
  * Role Schema
  */
-var MenuSchema = new Schema({
-    menu: {type: String, ref: 'Menu'}
-});
+
 var RoleSchema = new Schema({
     _id: String,
-    menus: [MenuSchema]
+    description:String
 });
 
 mongoose.model('Role', RoleSchema);
