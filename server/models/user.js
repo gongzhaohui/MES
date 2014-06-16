@@ -6,38 +6,37 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     crypto = require('crypto');
-
+ 
 /**
- * Validations
- */
-var validatePresenceOf = function(value) {
-    // If you are authenticating by any of the oauth strategies, don't validate.
-    return (this.provider && this.provider !== 'local') || value.length;
-};
-var RoleSchema = new Schema({
-    role: {type:String,ref:'Role'}
-});
+  * Validations
+  */
+ var validatePresenceOf = function(value) {
+     // If you are authenticating by any of the oauth strategies, don't validate.
+     return (this.provider && this.provider !== 'local') || (value && value.length);
+ };
+
 /**
  * User Schema
  */
 var UserSchema = new Schema({
     name: {
         type: String,
-        required: true,
-        validate: [validatePresenceOf, 'Name cannot be blank']
+        required: true
     },
     email: {
         type: String,
         required: true,
-        match: [/.+\@.+\..+/, 'Please enter a valid email'],
-        validate: [validatePresenceOf, 'Email cannot be blank']
+        match: [/.+\@.+\..+/, 'Please enter a valid email']
     },
     username: {
         type: String,
         unique: true,
-        validate: [validatePresenceOf, 'Username cannot be blank']
+        required: true
     },
-    roles:[RoleSchema],
+    roles: {
+        type: Array,
+        default: ['authenticated']
+    },
     hashed_password: {
         type: String,
         validate: [validatePresenceOf, 'Password cannot be blank']
@@ -47,7 +46,6 @@ var UserSchema = new Schema({
         default: 'local'
     },
     salt: String,
-    depart:{type:String,ref:'depart'},
     facebook: {},
     twitter: {},
     github: {},
@@ -91,7 +89,7 @@ UserSchema.methods = {
         var roles = this.roles;
         return roles.indexOf('admin') !== -1 || roles.indexOf(role) !== -1;
     },
-	
+
     /**
      * IsAdmin - check if the user is an administrator
      *
@@ -101,7 +99,7 @@ UserSchema.methods = {
     isAdmin: function() {
         return this.roles.indexOf('admin') !== -1;
     },
-	
+
     /**
      * Authenticate - check if the passwords are the same
      *
