@@ -1,0 +1,31 @@
+{
+  "name": "mean-tokens",
+  "description": "MEAN - A Modern Stack: Tokens editable",
+  "version": "0.0.4",
+  "private": false,
+  "mean": true,
+  "author": {
+    "name": "Rivka Tzur"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/linnovate/mean-tokens.git"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.3.x"
+  },
+  "readme": "ERROR: No README data found!",
+  "homepage": "https://github.com/linnovate/mean-tokens",
+  "_id": "mean-tokens@0.0.4",
+  "dist": {
+    "shasum": "07b7db6db51b100050bfdcc835600ff850c813a4"
+  },
+  "_from": "https://github.com/linnovate/mean-tokens/tarball/master",
+  "_resolved": "https://github.com/linnovate/mean-tokens/tarball/master",
+  "bugs": {
+    "url": "https://github.com/linnovate/mean-tokens/issues"
+  },
+  "_shasum": "fe1b215acc9b4164cd28fddad71493dc9383deb5"
+}

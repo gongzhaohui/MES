@@ -4,7 +4,6 @@
  * Defining the Package
  */
 var Module = require('meanio').Module;
-
 var Mes = new Module('Mes');
 
 /*
