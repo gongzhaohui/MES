@@ -1,11 +1,12 @@
 .DS_Store
 .nodemonignore
+npm-debug.log
 .sass-cache/
 .bower-*/
 .idea/
 nbproject/
 node_modules/
-public/system/lib
+bower_components
 mean.iml
 test/coverage/
 modules/public/
